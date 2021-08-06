@@ -14,8 +14,7 @@ const User = require('../models/User');
 
 // ---- Create Users
 exports.signup = (req, res, next) => {
-    // check if all is filled
-    // hash password
+    // hash the password sent
     bcrypt.hash(req.body.password, 10)
         .then(passwordHashed => {
             // create user based on model User
@@ -27,14 +26,11 @@ exports.signup = (req, res, next) => {
             });
             // save user in database
             User.create(newUser, (error, message) => {
-                // send response 
-                if (error) {
-                    return res.status(500).json({ error: error })
-                }
+                // error 
+                if (error) { return res.status(500).json({ error: error }) }
+                // send response
                 res.status(201).json({ message });
             });
-
-
         })
         .catch(error => res.status(500).json({ error }));
 };
@@ -44,8 +40,8 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     console.log(req.body.email);
     // Search User in db with email using User model
-    User.findOne({email: req.body.email}, (error, data) => {
-
+    User.findOne({ email: req.body.email }, (error, data) => {
+        // can't find the user
         if (error) { return res.status(500).json({ error }) }
 
         // Compare password
@@ -76,7 +72,9 @@ exports.login = (req, res, next) => {
 // ---- Modify Users
 exports.edit = (req, res, next) => {
     // Make sure that the user wants to modify his account with password
-    User.findOne({id_user: req.body.userId}, (error, data) => {
+    User.findOne({ id_user: req.body.userId }, (error, data) => {
+        // can't find the user
+        if (error) { return res.status(500).json({ error }) }
         // confirm password with compare
         bcrypt.compare(req.body.password, data.pass)
             .then(valid => {
@@ -99,13 +97,32 @@ exports.edit = (req, res, next) => {
 
 // ---- Delete user
 exports.delete = (req, res, next) => {
-    // confirm password with compare
-    // delete account
+    // Make sure that the user wants to modify his account with password
+    User.findOne({ id_user: req.body.userId }, (error, data) => {
+        // can't find the user
+        if (error) { return res.status(500).json({ error }) }
+        // confirm password with compare
+        bcrypt.compare(req.body.password, data.pass)
+            .then(valid => {
+                // password error
+                if (!valid) {
+                    return res.status(401).json({ error: 'Incorrect Password' });
+                }
+                // password good 
+                // Delete account in the db
+                User.delete({ id_user: req.body.userId }, (error, message) => {
+                    if (error) {
+                        return res.status(500).json({ error })
+                    }
+                    res.status(200).json({ message });
+                });
+            });
+    });
 };
 
 
 // ---- Find One user
-exports.findOne = (req, res, next) => {
+exports.findOneUser = (req, res, next) => {
     // confirm password with compare
     // delete account
 };
