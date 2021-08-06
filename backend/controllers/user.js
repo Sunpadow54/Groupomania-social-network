@@ -2,6 +2,7 @@
 // ------------------------- IMPORTS -------------------------
 
 const bcrypt = require('bcrypt'); // package password cryptage
+const jwToken = require('jsonwebtoken'); // package token
 
 // ---- import User Model
 const User = require('../models/User');
@@ -28,7 +29,7 @@ exports.signup = (req, res, next) => {
             User.create(newUser, (error, message) => {
                 // send response 
                 if (error) {
-                    return res.status(500).json({ error: error.sqlMessage })
+                    return res.status(500).json({ error: error })
                 }
                 res.status(201).json({ message });
             });
@@ -41,19 +42,32 @@ exports.signup = (req, res, next) => {
 
 // ---- Log Users
 exports.login = (req, res, next) => {
-    // Search User in db with email user User model
-    User.findByEmail(req.body.email, (error, data) => {
+    console.log(req.body.email);
+    // Search User in db with email using User model
+    User.findOne({email: req.body.email}, (error, data) => {
+
         if (error) { return res.status(500).json({ error }) }
+
         // Compare password
         bcrypt.compare(req.body.password, data.pass)
             .then(valid => {
                 // password error
                 if (!valid) {
-                    return res.status(401).json({ error: 'Mot de passe incorrect' });
+                    return res.status(401).json({ error: 'Incorrect Password' });
                 }
                 // success
-                // send Token for the User
-                res.status(200).json({ message: 'good password, you can log' })
+                res.status(200).json({
+                    // send user _id & token auth
+                    userId: data.id_user,
+                    token: jwToken.sign(
+                        // 1rst param : payload : data we wants to encode
+                        { userId: data.id_user },
+                        // 2nd param : secret key for encode
+                        process.env.TOKEN_KEY,
+                        // 3rd param : to configure duration of the token
+                        { expiresIn: '24h' }
+                    )
+                });
             })
             .catch(error => res.status(500).json({ error }));
     });
@@ -61,8 +75,25 @@ exports.login = (req, res, next) => {
 
 // ---- Modify Users
 exports.edit = (req, res, next) => {
-    // confirm password with compare
-    // update with new req.body
+    // Make sure that the user wants to modify his account with password
+    User.findOne({id_user: req.body.userId}, (error, data) => {
+        // confirm password with compare
+        bcrypt.compare(req.body.password, data.pass)
+            .then(valid => {
+                // password error
+                if (!valid) {
+                    return res.status(401).json({ error: 'Incorrect Password' });
+                }
+                // password good 
+                // Update in the db
+                User.edit(req.body, (error, message) => {
+                    if (error) {
+                        return res.status(500).json({ error })
+                    }
+                    res.status(201).json({ message });
+                })
+            })
+    })
 };
 
 

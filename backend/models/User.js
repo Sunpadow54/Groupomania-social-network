@@ -22,7 +22,7 @@ User.create = (newUser, result) => {
     // ask SQL
     sql.query(query, (error, res) => {
         // error
-        if (error) { return result(error, null); }
+        if (error) { return result(error.sqlMessage, null); }
         // success
         result(null, 'User is successfully created');
     });
@@ -30,10 +30,11 @@ User.create = (newUser, result) => {
 };
 
 
-// ---- to find the password of a user with email
-User.findByEmail = (userMail, result) => {
+// ---- Find One user & return all data
+User.findOne = (where, result) => {
+    const inserts = [Object.keys(where), Object.values(where)];
     // define the query
-    const query = sql.format(`SELECT pass FROM users WHERE email=?`, userMail);
+    const query = sql.format(`SELECT * FROM users WHERE ??=?`, inserts);
     // ask SQL 
     sql.query(query, (error, res) => {
         // errors
@@ -43,5 +44,20 @@ User.findByEmail = (userMail, result) => {
         result(null, res[0]);
     })
 }
+
+
+// ---- edit
+User.edit = (user, result) => {
+    // define the query
+    const inserts = [user.email, user.lastname, user.firstname, user.userId];
+    const query = sql.format(`UPDATE users SET email = ?, lastname = ?, firstname = ? WHERE id_user = ?`, inserts);
+    sql.query(query, (error, res) => {
+        // errors
+        if (error) { return result(error.sqlMessage, null); }
+        // success
+        result(null, 'Account successfully edited');
+    })
+}
+
 
 module.exports = User;

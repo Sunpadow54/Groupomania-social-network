@@ -7,8 +7,8 @@ const express = require('express');
 const router = express.Router();
 
 // ---- Import middelwares
-/* const limiter = require('../middleware/limiter-config');
-const { userSignUpRules, validateSignUp } = require('../middleware/validate'); */
+const auth = require('../middleware/auth'); // to protect road (token)
+
 // ----- Import Controlls
 const userCtrl = require('../controllers/user');
 
@@ -19,7 +19,7 @@ const userCtrl = require('../controllers/user');
 router.post('/signup', /* limiter, userSignUpRules(), validateSignUp ,*/ userCtrl.signup);
 router.post('/login', /* limiter, */ userCtrl.login);
 router.put('/edit', /* auth, */ userCtrl.edit);
-router.delete('/delete', /* auth, */ userCtrl.delete);
+router.delete('/delete', /* auth,  */userCtrl.delete);
 
 // ============================================================
 // ------------------------- EXPORT ---------------------------
