@@ -26,3 +26,26 @@ exports.createPost = (req, res, next) => {
     })
 };
 
+
+exports.editPost = (req, res, next) => {
+    const editedPost = { ...req.body, postId: req.params.id }
+
+    Post.edit(editedPost, (error, message) => {
+        // error 
+        if (error) { return res.status(500).json({ error: error }) }
+        // send response
+        res.status(201).json({ message });
+    })
+
+};
+
+
+exports.deletePost = (req, res, next) => {
+    Post.delete( req.params.id , (error, message) => {
+        // error 
+        if (error) { return res.status(500).json({ error: error }) }
+        // send response
+        res.status(201).json({ message });
+    })
+};
+
