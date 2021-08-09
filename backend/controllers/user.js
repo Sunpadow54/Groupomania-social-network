@@ -38,7 +38,6 @@ exports.signup = (req, res, next) => {
 
 // ---- Log Users
 exports.login = (req, res, next) => {
-    console.log(req.body.email);
     // Search User in db with email using User model
     User.findOne({ email: req.body.email }, (error, data) => {
         // can't find the user
@@ -70,7 +69,7 @@ exports.login = (req, res, next) => {
 };
 
 // ---- Modify Users
-exports.edit = (req, res, next) => {
+exports.editUser = (req, res, next) => {
     // Make sure that the user wants to modify his account with password
     User.findOne({ id_user: req.body.userId }, (error, data) => {
         // can't find the user
@@ -96,9 +95,9 @@ exports.edit = (req, res, next) => {
 
 
 // ---- Delete user
-exports.delete = (req, res, next) => {
+exports.deleteUser = (req, res, next) => {
     // Make sure that the user wants to modify his account with password
-    User.findOne({ id_user: req.body.userId }, (error, data) => {
+    User.findOne( req.body.userId , (error, data) => {
         // can't find the user
         if (error) { return res.status(500).json({ error }) }
         // confirm password with compare

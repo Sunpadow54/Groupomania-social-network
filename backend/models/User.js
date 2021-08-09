@@ -63,15 +63,13 @@ User.edit = (user, result) => {
 // Delete
 User.delete = (userId, result) => {
     // define the query
-    const inserts = [Object.keys(userId), Object.values(userId)];
-    const query = sql.format(`DELETE FROM users WHERE ??=?`, inserts);
+    const query = sql.format(`DELETE FROM users WHERE id_user=?`, userId);
     sql.query(query, (error, res) => {
         // error
         if (error) { return result(error, null); }
         // success
         result(null, 'Account successfully deleted');
     })
-
 }
 
 

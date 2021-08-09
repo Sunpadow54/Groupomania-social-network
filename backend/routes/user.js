@@ -18,8 +18,8 @@ const userCtrl = require('../controllers/user');
 
 router.post('/signup', /* limiter, userSignUpRules(), validateSignUp ,*/ userCtrl.signup);
 router.post('/login', /* limiter, */ userCtrl.login);
-router.put('/edit', /* auth, */ userCtrl.edit);
-router.delete('/delete', /* auth,  */userCtrl.delete);
+router.put('/edit', /* auth, */ userCtrl.editUser);
+router.delete('/delete', /* auth,  */userCtrl.deleteUser);
 
 // ============================================================
 // ------------------------- EXPORT ---------------------------
