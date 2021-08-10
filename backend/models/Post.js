@@ -60,12 +60,12 @@ Post.delete = (postId, result) => {
 
 
 // get all posts
-Post.getAll = (result) => {
+Post.findAll = (result) => {
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.title, p.content, p.img, 
-            DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
-            CONCAT(u.lastname, ' ', u.firstname) as user
+                DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
+                CONCAT(u.lastname, ' ', u.firstname) as author
             FROM posts AS p 
             NATURAL JOIN users AS u 
             ORDER BY p.date_post DESC`
@@ -78,6 +78,29 @@ Post.getAll = (result) => {
         result(null, res);
     })
 }
+
+
+// get one post
+Post.findOne = (id, result) => {
+    // define the query
+    const query = sql.format(`
+            SELECT p.id_post, p.title, p.content, p.img, 
+                DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
+                CONCAT(u.lastname, ' ', u.firstname) as author
+            FROM posts AS p
+            NATURAL JOIN users AS u
+            WHERE p.id_post = ?
+            `, id
+    );
+    // ask SQL
+    sql.query(query, (error, res) => {
+        // error
+        if (error) { return result(error, null); }
+        // success
+        result(null, res);
+    })
+}
+
 
 
 module.exports = Post;

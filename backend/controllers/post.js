@@ -20,7 +20,7 @@ exports.createPost = (req, res, next) => {
         if (error) { return res.status(500).json({ error: error }) }
         // send response
         res.status(201).json({ message });
-    })
+    });
 };
 
 
@@ -32,7 +32,7 @@ exports.editPost = (req, res, next) => {
         if (error) { return res.status(500).json({ error: error }) }
         // send response
         res.status(201).json({ message });
-    })
+    });
 
 };
 
@@ -43,16 +43,27 @@ exports.deletePost = (req, res, next) => {
         if (error) { return res.status(500).json({ error: error }) }
         // send response
         res.status(201).json({ message });
-    })
+    });
 };
 
 
 exports.getAllPosts = (req, res, next) => {
-    Post.getAll( (error, data) => {
+    Post.findAll( (error, posts) => {
         // error 
         if (error) { return res.status(500).json({ error: error }) }
         // send response
-        res.status(201).json({ data });
-    })
+        res.status(201).json( posts );
+    });
+};
+
+
+exports.getOnePost = (req, res, next) => {
+    Post.findOne( req.params.id, (error, post)  => {
+        // error 
+        if (error) { return res.status(500).json({ error: error }) }
+        // send response
+        res.status(201).json( post );
+    });
+
 };
 

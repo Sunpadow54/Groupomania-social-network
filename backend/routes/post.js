@@ -20,6 +20,7 @@ router.post('/', /* auth,  */postCtrl.createPost);
 router.put('/:id', /* auth,  */postCtrl.editPost);
 router.delete('/:id', /* auth,  */postCtrl.deletePost);
 router.get('/', /* auth,  */postCtrl.getAllPosts);
+router.get('/:id', /* auth,  */postCtrl.getOnePost);
 // ============================================================
 // ------------------------- EXPORT ---------------------------
 
