@@ -15,61 +15,69 @@ class User {
 
 
 // ---- to insert new user in Db
-User.create = (newUser, result) => {
+User.create = (newUser) => {
     // define the query
     const inserts = [Object.keys(newUser), Object.values(newUser)];
     const query = sql.format(`INSERT INTO users (??) VALUES (?)`, inserts);
     // ask SQL
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error.sqlMessage, null); }
-        // success
-        result(null, 'User is successfully created');
-    });
-    // close connexion to db ?
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err.sqlMessage);
+            // success
+            resolve('User is successfully created');
+        });
+    })
 };
 
 
 // ---- Find One user & return all data
-User.findOne = (where, result) => {
-    const inserts = [Object.keys(where), Object.values(where)];
+User.findOne = (where) => {
     // define the query
+    const inserts = [Object.keys(where), Object.values(where)];
     const query = sql.format(`SELECT * FROM users WHERE ??=?`, inserts);
-    // ask SQL 
-    sql.query(query, (error, res) => {
-        // errors
-        if (error) { return result(error, null); }
-        if (res.length === 0) { return result('user not found', null); }
-        // success
-        result(null, res[0]);
-    })
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // errors
+            if (err || res.length === 0) return reject('This account does not exist');
+            // success
+            resolve(res[0]); // [0] cause RowDataPacket
+        })
+    });
 }
 
 
 // ---- edit
-User.edit = (user, result) => {
+User.edit = (user) => {
     // define the query
     const inserts = [user.email, user.lastname, user.firstname, user.userId];
     const query = sql.format(`UPDATE users SET email = ?, lastname = ?, firstname = ? WHERE id_user = ?`, inserts);
-    sql.query(query, (error, res) => {
-        // errors
-        if (error) { return result(error.sqlMessage, null); }
-        // success
-        result(null, 'Account successfully edited');
-    })
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // errors
+            if (err) return reject(error.sqlMessage); 
+            // success
+            resolve('Account successfully edited');
+        })
+    });
 }
 
 
 // Delete
-User.delete = (userId, result) => {
+User.delete = (userId) => {
     // define the query
     const query = sql.format(`DELETE FROM users WHERE id_user=?`, userId);
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error, null); }
-        // success
-        result(null, 'Account successfully deleted');
-    })
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(error); 
+            // success
+            resolve('Account successfully deleted');
+        })
+    });
 }
 
 

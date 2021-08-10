@@ -15,52 +15,58 @@ class Post {
 }
 
 // to insert new Post 
-Post.create = (newPost, result) => {
+Post.create = (newPost) => {
     // define sql query
     const inserts = [Object.keys(newPost), Object.values(newPost)];
     const query = sql.format(`INSERT INTO posts (??) VALUES (?)`, inserts);
     // ask SQL
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error.sqlMessage, null); }
-        // success
-        result(null, 'Post is successfully created');
-    });
-};
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err.sqlMessage);
+            // success
+            resolve('Post is successfully created');
+        });
+    })
+}
 
 
 // modify Post
 // ---- edit
-Post.edit = (post, result) => {
+Post.edit = (post) => {
     // define the query
     const inserts = [post.title, post.content, post.imgUrl, post.postId];
     const query = sql.format(`UPDATE posts SET title = ?, content = ?, img = ? WHERE id_post = ?`, inserts);
     // ask SQL
-    sql.query(query, (error, res) => {
-        // errors
-        if (error) { return result(error.sqlMessage, null); }
-        // success
-        result(null, 'Post modified with success');
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err.sqlMessage);
+            // success
+            resolve('Post modified with success');
+        });
     })
-}
+};
 
 
 // Delete
-Post.delete = (postId, result) => {
+Post.delete = (postId) => {
     // define the query
     const query = sql.format(`DELETE FROM posts WHERE id_post=?`, postId);
     // ask SQL
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error, null); }
-        // success
-        result(null, 'Post successfully deleted');
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err);
+            // success
+            resolve('Post successfully deleted');
+        });
     })
-}
+};
 
 
 // get all posts
-Post.findAll = (result) => {
+Post.findAll = () => {
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.title, p.content, p.img, 
@@ -69,15 +75,17 @@ Post.findAll = (result) => {
             FROM posts AS p 
             NATURAL JOIN users AS u 
             ORDER BY p.date_post DESC`
-        );
+    );
     // ask SQL
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error, null); }
-        // success
-        result(null, res);
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err);
+            // success
+            resolve(res);
+        });
     })
-}
+};
 
 
 // get one post
@@ -93,13 +101,15 @@ Post.findOne = (id, result) => {
             `, id
     );
     // ask SQL
-    sql.query(query, (error, res) => {
-        // error
-        if (error) { return result(error, null); }
-        // success
-        result(null, res);
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err || res.length === 0) return reject('This post does not exist');
+            // success
+            resolve(res);
+        });
     })
-}
+};
 
 
 

@@ -15,55 +15,37 @@ exports.createPost = (req, res, next) => {
         ...req.body.post,
     });
     // insert post in Db
-    Post.create(newPost, (error, message) => {
-        // error 
-        if (error) { return res.status(500).json({ error: error }) }
-        // send response
-        res.status(201).json({ message });
-    });
+    Post.create(newPost)
+        .then(message => res.status(201).json({ message }))
+        .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.editPost = (req, res, next) => {
-    const editedPost = { ...req.body, postId: req.params.id }
-
-    Post.edit(editedPost, (error, message) => {
-        // error 
-        if (error) { return res.status(500).json({ error: error }) }
-        // send response
-        res.status(201).json({ message });
-    });
-
+    const editedPost = { ...req.body, postId: req.params.id };
+    // modify in db
+    Post.edit(editedPost)
+        .then(message => res.status(201).json({ message }))
+        .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.deletePost = (req, res, next) => {
-    Post.delete( req.params.id , (error, message) => {
-        // error 
-        if (error) { return res.status(500).json({ error: error }) }
-        // send response
-        res.status(201).json({ message });
-    });
+    Post.delete(req.params.id)
+        .then(message => res.status(201).json({ message }))
+        .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.getAllPosts = (req, res, next) => {
-    Post.findAll( (error, posts) => {
-        // error 
-        if (error) { return res.status(500).json({ error: error }) }
-        // send response
-        res.status(201).json( posts );
-    });
+    Post.findAll()
+        .then(posts => res.status(201).json( posts ))
+        .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.getOnePost = (req, res, next) => {
-    Post.findOne( req.params.id, (error, post)  => {
-        // error 
-        if (error) { return res.status(500).json({ error: error }) }
-        // send response
-        res.status(201).json( post );
-    });
-
+    Post.findOne(req.params.id)
+    .then(post => res.status(201).json( post ))
+    .catch(error => res.status(500).json({ error }));
 };
-
