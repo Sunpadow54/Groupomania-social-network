@@ -7,7 +7,7 @@ const sql = require('../config/db-connect');
 class Post {
     constructor(post) {
         this.id_user = post.userId;
-        this.date_post = post.date;
+        this.date_post = new Date();
         this.title = post.title;
         this.content = post.content;
         this.img = post.imgUrl;
@@ -35,6 +35,7 @@ Post.edit = (post, result) => {
     // define the query
     const inserts = [post.title, post.content, post.imgUrl, post.postId];
     const query = sql.format(`UPDATE posts SET title = ?, content = ?, img = ? WHERE id_post = ?`, inserts);
+    // ask SQL
     sql.query(query, (error, res) => {
         // errors
         if (error) { return result(error.sqlMessage, null); }
@@ -48,11 +49,33 @@ Post.edit = (post, result) => {
 Post.delete = (postId, result) => {
     // define the query
     const query = sql.format(`DELETE FROM posts WHERE id_post=?`, postId);
+    // ask SQL
     sql.query(query, (error, res) => {
         // error
         if (error) { return result(error, null); }
         // success
         result(null, 'Post successfully deleted');
+    })
+}
+
+
+// get all posts
+Post.getAll = (result) => {
+    // define the query
+    const query = sql.format(`
+            SELECT p.id_post, p.title, p.content, p.img, 
+            DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
+            CONCAT(u.lastname, ' ', u.firstname) as user
+            FROM posts AS p 
+            NATURAL JOIN users AS u 
+            ORDER BY p.date_post DESC`
+        );
+    // ask SQL
+    sql.query(query, (error, res) => {
+        // error
+        if (error) { return result(error, null); }
+        // success
+        result(null, res);
     })
 }
 
