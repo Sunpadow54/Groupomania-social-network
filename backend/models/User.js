@@ -57,7 +57,7 @@ User.edit = (user) => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // errors
-            if (err) return reject(error.sqlMessage); 
+            if (err) return reject(err.sqlMessage); 
             // success
             resolve('Account successfully edited');
         })
@@ -73,7 +73,7 @@ User.delete = (userId) => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
-            if (err) return reject(error); 
+            if (err) return reject(err.sqlMessage); 
             // success
             resolve('Account successfully deleted');
         })
