@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS users 
 (
     id_user INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -16,5 +17,24 @@ CREATE TABLE IF NOT EXISTS posts
     date_post DATETIME NOT NULL, 
     title VARCHAR(100) NOT NULL,
     content TEXT,
-    img VARCHAR(250)
+    img VARCHAR(250),
+    CONSTRAINT fk_id_user_posts
+        FOREIGN KEY (id_user)
+        REFERENCES users(id_user) ON DELETE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+
+CREATE TABLE IF NOT EXISTS comments 
+(
+    id_comment INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_post INT NOT NULL,
+    id_user INT, 
+    date_comment DATETIME NOT NULL, 
+    content_comment TEXT NOT NULL,
+    CONSTRAINT fk_id_post
+        FOREIGN KEY (id_post)
+        REFERENCES posts(id_post) ON DELETE CASCADE,
+    CONSTRAINT fk_id_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id_user) ON DELETE SET NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
