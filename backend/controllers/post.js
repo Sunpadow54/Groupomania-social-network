@@ -1,18 +1,20 @@
 // Post Controls
 // ------------------------- IMPORTS -------------------------
 
-// ---- import Post Model
+// ---- import Models
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 
 
 // ============================================================
 // -------------------------- CONTROLS ------------------------
 
-
+// ------------ POST
 exports.createPost = (req, res, next) => {
     // create post
+    // get id token
     const newPost = new Post({
-        ...req.body.post,
+        ...req.body.post
     });
     // insert post in Db
     Post.create(newPost)
@@ -22,6 +24,7 @@ exports.createPost = (req, res, next) => {
 
 
 exports.editPost = (req, res, next) => {
+    // compare postuser = idtoken
     const editedPost = { ...req.body, postId: req.params.id };
     // modify in db
     Post.edit(editedPost)
@@ -31,6 +34,7 @@ exports.editPost = (req, res, next) => {
 
 
 exports.deletePost = (req, res, next) => {
+    // verif idpost = idtoken
     Post.delete(req.params.id)
         .then(message => res.status(201).json({ message }))
         .catch(error => res.status(500).json({ error }));
@@ -45,7 +49,16 @@ exports.getAllPosts = (req, res, next) => {
 
 
 exports.getOnePost = (req, res, next) => {
+    // get the post from id post
     Post.findOne(req.params.id)
-    .then(post => res.status(201).json( post ))
-    .catch(error => res.status(500).json({ error }));
+        .then(post => {
+            // get all comments of the Post
+            Comment.findAll(req.params.id)
+            .then(comments => {
+                const postWithComments =  { ...post, comments : comments};
+                res.status(201).json( postWithComments )
+            })
+            .catch(error => res.status(500).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };
