@@ -15,7 +15,7 @@ const User = require('../models/User');
 // ---- Create Users
 exports.signup = (req, res, next) => {
     // hash the password sent
-    bcrypt.hash(req.body.password,)
+    bcrypt.hash(req.body.password, 10)
         .then(passwordHashed => {
             // create user based on model User
             const newUser = new User({
