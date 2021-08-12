@@ -89,7 +89,7 @@ Post.findAll = () => {
 
 
 // get one post
-Post.findOne = (id, result) => {
+Post.findOne = (id) => {
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.title, p.content, p.img, 
@@ -106,7 +106,7 @@ Post.findOne = (id, result) => {
             // error
             if (err || res.length === 0) return reject('This post does not exist');
             // success
-            resolve(res);
+            resolve(res[0]);
         });
     })
 };
