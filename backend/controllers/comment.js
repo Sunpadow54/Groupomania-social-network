@@ -10,9 +10,9 @@ const Comment = require('../models/Comment');
 
 // ------------ POST
 exports.createComment = (req, res, next) => {
-    // get id token
     const newComment = new Comment({
         ...req.body.comment,
+        userId: req.body.userId
     });
     // insert post in Db
     Comment.create(newComment)
@@ -22,21 +22,41 @@ exports.createComment = (req, res, next) => {
 
 
 exports.editComment = (req, res, next) => {
-    // compare comment user = idtoken
-    const editedComment = { 
-        content : req.body.content,
-        postId: req.body.postId
-    };
-    // modify in db
-    Comment.edit(editedComment)
-        .then(message => res.status(201).json({ message }))
+    // Find the post to check if the user is the author of the Post
+    Comment.findUserId(req.params.id)
+        .then(commentUserId => {
+            const isAuthor = commentUserId.id_user === req.body.userId ? true : false;
+
+            // the user is not the author
+            if (!isAuthor) { throw 'You are not the author of the Post' };
+
+            // the user is the author
+            const editedComment = {
+                content: req.body.comment.content,
+                postId: req.body.comment.postId
+            };
+            // modify in db
+            Comment.edit(editedComment)
+                .then(message => res.status(201).json({ message }))
+                .catch(error => res.status(500).json({ error }));
+        })
         .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.deleteComment = (req, res, next) => {
-    // verif idpost = idtoken
-    Comment.delete(req.params.id)
-        .then(message => res.status(201).json({ message }))
+    // Find the post to check if the user is the author of the Post
+    Comment.findUserId(req.params.id)
+        .then(commentUserId => {
+            const isAuthor = commentUserId.id_user === req.body.userId ? true : false;
+
+            // the user is not the author
+            if (!isAuthor) { throw 'You are not the author of the Post' };
+
+            // the user is the author
+            Comment.delete(req.params.id)
+                .then(message => res.status(201).json({ message }))
+                .catch(error => res.status(500).json({ error }));
+        })
         .catch(error => res.status(500).json({ error }));
 };

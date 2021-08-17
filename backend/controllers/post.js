@@ -11,10 +11,9 @@ const Comment = require('../models/Comment');
 
 // ------------ POST
 exports.createPost = (req, res, next) => {
-    // create post
-    // get id token
     const newPost = new Post({
-        ...req.body.post
+        ...req.body.post,
+        userId: req.body.userId
     });
     // insert post in Db
     Post.create(newPost)
@@ -24,26 +23,52 @@ exports.createPost = (req, res, next) => {
 
 
 exports.editPost = (req, res, next) => {
-    // compare postuser = idtoken
-    const editedPost = { ...req.body, postId: req.params.id };
-    // modify in db
-    Post.edit(editedPost)
-        .then(message => res.status(201).json({ message }))
+    // Find the post to check if the user is the author of the Post
+    Post.findOne(req.params.id)
+        .then(dbPost => {
+            const isAuthor = dbPost.id_user === req.body.userId ? true : false;
+
+            // the user is not the author
+            if (!isAuthor) { throw 'You are not the author of the Post' };
+
+            // the user is the author
+            const editedPost = {
+                userId: req.body.userId,
+                ...req.body.post,
+                postId: req.params.id
+            };
+            // modify in db
+            Post.edit(editedPost)
+                .then(message => res.status(201).json({ message }))
+                .catch(error => res.status(500).json({ error }));
+        })
         .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.deletePost = (req, res, next) => {
-    // verif idpost = idtoken
-    Post.delete(req.params.id)
-        .then(message => res.status(201).json({ message }))
+    // Find the post to check if the user is the author of the Post
+    Post.findOne(req.params.id)
+        .then(dbPost => {
+            const isAuthor = dbPost.id_user === req.body.userId ? true : false;
+
+            // the user is not the author
+            if (!isAuthor) { throw 'You are not the author of the Post' };
+
+            // the user is the author
+            const ids = { postId: req.params.id, userId: req.body.userId }
+            Post.delete(ids)
+                .then(message => res.status(201).json({ message }))
+                .catch(error => res.status(500).json({ error }));
+
+        })
         .catch(error => res.status(500).json({ error }));
 };
 
 
 exports.getAllPosts = (req, res, next) => {
     Post.findAll()
-        .then(posts => res.status(201).json( posts ))
+        .then(posts => res.status(201).json(posts))
         .catch(error => res.status(500).json({ error }));
 };
 
@@ -54,11 +79,11 @@ exports.getOnePost = (req, res, next) => {
         .then(post => {
             // get all comments of the Post
             Comment.findAll(req.params.id)
-            .then(comments => {
-                const postWithComments =  { ...post, comments : comments};
-                res.status(201).json( postWithComments )
-            })
-            .catch(error => res.status(500).json({ error }));
+                .then(comments => {
+                    const postWithComments = { ...post, comments: comments };
+                    res.status(201).json(postWithComments)
+                })
+                .catch(error => res.status(500).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
 };

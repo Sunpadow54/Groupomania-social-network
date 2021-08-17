@@ -65,7 +65,7 @@ Comment.delete = (commentId) => {
 };
 
 
-// get all posts
+// get all comments
 Comment.findAll = (postId) => {
     // define the query
     const query = sql.format(`
@@ -86,6 +86,26 @@ Comment.findAll = (postId) => {
             // success
             const allComments = Object.values(JSON.parse(JSON.stringify(res)));
             resolve(allComments);
+        });
+    })
+};
+
+
+// get one comment
+Comment.findUserId = (id) => {
+    // define the query
+    const query = sql.format(`
+            SELECT id_user
+            FROM comments WHERE id_comment=?
+            `, id
+    );
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err || res.length === 0) return reject('This Comment does not exist');
+            // success
+            resolve(res[0]);
         });
     })
 };

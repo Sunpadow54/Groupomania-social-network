@@ -35,8 +35,12 @@ Post.create = (newPost) => {
 // ---- edit
 Post.edit = (post) => {
     // define the query
-    const inserts = [post.title, post.content, post.imgUrl, post.postId];
-    const query = sql.format(`UPDATE posts SET title = ?, content = ?, img = ? WHERE id_post = ?`, inserts);
+    const inserts = [post.title, post.content, post.imgUrl, post.postId, post.userId];
+    const query = sql.format(`
+            UPDATE posts
+            SET title=?, content=?, img=?
+            WHERE id_post=? AND id_user=?`
+            , inserts);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
@@ -50,13 +54,15 @@ Post.edit = (post) => {
 
 
 // Delete
-Post.delete = (postId) => {
+Post.delete = (post) => {
     // define the query
-    const query = sql.format(`DELETE FROM posts WHERE id_post=?`, postId);
+    const inserts = [post.postId, post.userId];
+    const query = sql.format(`DELETE FROM posts WHERE id_post=? AND id_user=?`, inserts);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
+            if (res.affectedRows === 0) return reject('Could not delete this Post')
             if (err) return reject(err);
             // success
             resolve('Post successfully deleted');
@@ -92,7 +98,7 @@ Post.findAll = () => {
 Post.findOne = (id) => {
     // define the query
     const query = sql.format(`
-            SELECT p.id_post, p.title, p.content, p.img, 
+            SELECT p.id_post, p.id_user, p.title, p.content, p.img, 
                 DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM posts AS p
