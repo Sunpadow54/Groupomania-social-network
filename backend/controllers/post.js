@@ -13,6 +13,7 @@ const Comment = require('../models/Comment');
 exports.createPost = (req, res, next) => {
     const newPost = new Post({
         ...req.body.post,
+       // imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         userId: req.body.userId
     });
     // insert post in Db
