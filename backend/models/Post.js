@@ -119,5 +119,26 @@ Post.findOne = (id) => {
 
 
 
+Post.findMasked = (idUser) => {
+    // define the query
+    const query = sql.format(`
+            SELECT id_post as idPost, title, content, img, 
+                date_post as date
+            FROM posts
+            WHERE id_user = ? AND is_active = 0
+            ORDER BY date_post DESC
+            `, idUser
+    );
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err) return reject(err);
+            // success
+            resolve(JSON.parse(JSON.stringify(res)));
+        });
+    })
+};
+
 
 module.exports = Post;

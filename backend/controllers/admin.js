@@ -25,5 +25,27 @@ exports.banUser = (req, res, next) => {
 };
 
 exports.getMaskedPosts = (req, res, next) => {
+    let masked;
+    // find all posts from user that are not active
+    Post.findMasked(req.params.userId)
+    .then(userMaskPosts => {
+        // populate masked variable
+        masked = [...userMaskPosts];
+        // find all comments from user that are not active
+        Comment.findMasked(req.params.userId)
+            .then(userMaskComments => {
+                // populate masked variable
+                masked = [...masked,...userMaskComments];
+                // sort by date desc
+                masked.sort(function(a,b){
+                    console.log(new Date(b.date));
+                    return new Date(b.date) - new Date(a.date);
+                });
+                
+                res.status(201).json(masked)
+            })
+            .catch(error => res.status(500).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
 
 }
