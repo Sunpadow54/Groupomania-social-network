@@ -20,6 +20,9 @@ router.post('/', /* auth,  */commentCtrl.createComment);
 router.put('/:id', /* auth,  */commentCtrl.editComment);
 router.delete('/:id', /* auth,  */commentCtrl.deleteComment);
 
+router.put('/moderate/:id', /* authUser, */ /* authRole('admin'),  *//* auth,  */commentCtrl.moderateComment);
+
+
 // ============================================================
 // ------------------------- EXPORT ---------------------------
 

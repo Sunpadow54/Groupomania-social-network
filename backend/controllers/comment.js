@@ -60,3 +60,11 @@ exports.deleteComment = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+
+exports.moderateComment = (req, res, next) => {
+    // change isactive bolean in db to hide posts
+    Comment.toogleActive(req.params.id)
+        .then(() => res.status(201).json('this comment has been moderated'))
+        .catch(error => res.status(500).json({ error }));
+};

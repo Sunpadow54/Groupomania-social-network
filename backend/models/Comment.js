@@ -74,7 +74,7 @@ Comment.findAll = (postId) => {
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM comments AS c
             NATURAL JOIN users AS u
-            WHERE c.id_post=?
+            WHERE c.id_post = ? AND u.is_active = 1 AND c.is_active = 1
             ORDER BY c.date_comment DESC`
             , postId
     );
@@ -108,6 +108,30 @@ Comment.findUserId = (id) => {
             resolve(res[0]);
         });
     })
+};
+
+
+Comment.toogleActive = (idComment) => {
+    // define the query
+    const query = sql.format(`
+                Update comments SET is_active = (
+                    CASE
+                        WHEN is_active = 1 THEN 0
+                        ELSE 1
+                    END
+                )
+                WHERE id_comment = ?
+                `, idComment
+    );
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err || res.changedRows === 0) return reject('This post cannot be updated');
+            // success
+            resolve(res);
+        })
+    });
 };
 
 
