@@ -4,6 +4,9 @@
 const express = require('express'); // framework express
 const bodyParser = require('body-parser'); // Package (to format body (ex: from Post request) )
 const path = require('path'); // from node
+// security
+const helmet = require('helmet'); // against Xss attacks
+const hpp = require('hpp'); // against Dos attack (avoid parameters pollution)
 
 // ---- Import Roads
 const userRoutes = require('./routes/user');
@@ -34,6 +37,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // a voir
 // --- Format Json
 app.use(bodyParser.json());
 
+// security
+app.use(helmet()); // Protect from cross-site scripting (XSS)
+app.use(hpp());
 
 // --- middleware (for file upload path)
 app.use('/images', express.static(path.join(__dirname, 'images')));
