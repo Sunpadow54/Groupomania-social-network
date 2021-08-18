@@ -80,6 +80,7 @@ Post.findAll = () => {
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM posts AS p 
             NATURAL JOIN users AS u 
+            WHERE u.is_active = 1 AND p.is_active = 1
             ORDER BY p.date_post DESC`
     );
     // ask SQL
@@ -103,7 +104,7 @@ Post.findOne = (id) => {
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM posts AS p
             NATURAL JOIN users AS u
-            WHERE p.id_post = ?
+            WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
             `, id
     );
     // ask SQL
@@ -117,6 +118,29 @@ Post.findOne = (id) => {
     })
 };
 
+
+Post.toogleActive = (idPost) => {
+    // define the query
+    const query = sql.format(`
+                Update posts SET is_active = (
+                    CASE
+                        WHEN is_active = 1 THEN 0
+                        ELSE 1
+                    END
+                )
+                WHERE id_post = ?
+                `, idPost
+    );
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err || res.changedRows === 0) return reject('This post cannot be updated');
+            // success
+            resolve(res);
+        })
+    });
+};
 
 
 Post.findMasked = (idUser) => {

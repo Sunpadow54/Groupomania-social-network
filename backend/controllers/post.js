@@ -88,3 +88,11 @@ exports.getOnePost = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+
+exports.moderatePost = (req, res, next) => {
+    // get the post from id post
+    Post.toogleActive(req.params.id)
+        .then(() => res.status(201).json('this post has been moderated'))
+        .catch(error => res.status(500).json({ error }));
+};
