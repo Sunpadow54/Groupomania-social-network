@@ -17,7 +17,9 @@ const adminCtrl = require('../controllers/admin');
 // ------------------------- ROADS ----------------------------
 // ---- Posts roads
 router.get('/users', /* authUser, roleAdmin, */adminCtrl.getAllUsers);
-router.delete('/users/:id', /* authUser, roleAdmin, */adminCtrl.deleteUser);
+router.get('/users/:userId', /* authUser, roleAdmin, */adminCtrl.getMaskedPosts )
+router.put('/users/:userId', /* authUser, roleAdmin, */adminCtrl.banUser);
+
 
 // ============================================================
 // ------------------------- EXPORT ---------------------------

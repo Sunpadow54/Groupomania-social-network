@@ -18,7 +18,12 @@ exports.getAllUsers = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-
-exports.deleteUser = (req, res, next) => {
-
+exports.banUser = (req, res, next) => {
+    User.ban(req.params.userId)
+        .then(message => res.status(201).json({ message }))
+        .catch(error => res.status(500).json({ error }));
 };
+
+exports.getMaskedPosts = (req, res, next) => {
+
+}

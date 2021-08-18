@@ -36,12 +36,12 @@ User.edit = (user) => {
     // define the query
     const inserts = [user.email, user.lastname, user.firstname, user.userId];
     const query = sql.format(`UPDATE users SET email = ?, lastname = ?, firstname = ? WHERE id_user = ?`, inserts);
-    
+
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // errors
-            if (err) return reject(err.sqlMessage); 
+            if (err) return reject(err.sqlMessage);
             // success
             resolve('Account successfully edited');
         })
@@ -57,11 +57,11 @@ User.delete = (userId) => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
-            if (err) return reject(err.sqlMessage); 
+            if (err) return reject(err.sqlMessage);
             // success
             resolve('Account successfully deleted');
         })
-    }); 
+    });
 }
 
 
@@ -82,8 +82,9 @@ User.findOne = (where) => {
 }
 
 User.findAll = () => {
+    // define the query
     const query = sql.format(`
-                SELECT id_user as userId, email, CONCAT(lastname, ' ', firstname) as name 
+                SELECT id_user as userId, email, CONCAT(lastname, ' ', firstname) as name, is_active as isActive
                 FROM users`);
     // ask SQL
     return new Promise((resolve, reject) => {
@@ -95,6 +96,32 @@ User.findAll = () => {
         })
     });
 }
+
+
+User.ban = (idUser) => {
+    // define the query
+    //const inserts = [user.isActive, user.id];
+    const query = sql.format(`
+                Update users SET is_active = (
+                    CASE
+                        WHEN is_active = 1 THEN 0
+                        ELSE 1
+                    END
+                )
+                WHERE id_user = ? AND is_admin = 0
+                `, idUser
+    );
+    // ask SQL
+    return new Promise((resolve, reject) => {
+        sql.query(query, (err, res) => {
+            // error
+            if (err || res.changedRows === 0) return reject('user cannot be updated');
+            // success
+            resolve(res);
+        })
+    });
+};
+
 
 
 module.exports = User;
