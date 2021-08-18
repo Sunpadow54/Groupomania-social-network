@@ -36,12 +36,12 @@ User.edit = (user) => {
     // define the query
     const inserts = [user.email, user.lastname, user.firstname, user.userId];
     const query = sql.format(`UPDATE users SET email = ?, lastname = ?, firstname = ? WHERE id_user = ?`, inserts);
-
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // errors
             if (err) return reject(err.sqlMessage);
+            if (res.changedRows === 0) return reject('This User has not been updated')
             // success
             resolve('Account successfully edited');
         })

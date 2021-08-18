@@ -1,4 +1,4 @@
-// User Roads
+// Profile road
 // ------------------------- IMPORTS -------------------------
 
 const express = require('express');
@@ -10,15 +10,15 @@ const router = express.Router();
 const auth = require('../middleware/auth'); // to protect road (token)
 
 // ----- Import Controlls
-const userCtrl = require('../controllers/user');
+const profileCtrl = require('../controllers/profile');
 
 
 // ============================================================
 // ------------------------- ROADS ----------------------------
 
-
-router.post('/signup', /* limiter, userSignUpRules(), validateSignUp ,*/ userCtrl.signup);
-router.post('/login', /* limiter, */ userCtrl.login);
+router.get('/:userId', /* auth, */ profileCtrl.getProfile);
+router.put('/:userId', /* auth, */ profileCtrl.editProfile);
+router.delete('/:userId', /* auth,  */profileCtrl.deleteProfile);
 
 
 // ============================================================
