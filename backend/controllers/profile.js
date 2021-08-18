@@ -2,6 +2,7 @@
 // ------------------------- IMPORTS -------------------------
 
 const bcrypt = require('bcrypt'); // package password cryptage
+const { encryptEmail } = require('../middleware/crypto.js'); // import crypto tool
 
 // ---- import User Model
 const User = require('../models/User');
@@ -24,11 +25,19 @@ exports.editProfile = (req, res, next) => {
             // confirm password with compare
             bcrypt.compare(req.body.password, user.pass)
                 .then(valid => {
+
                     // password error
                     if (!valid) throw 'Incorrect Password';
-                    // password good 
+                    
+                    // password good
+                    const userEdited = {
+                        ...req.body,
+                        email: encryptEmail(req.body.email),
+                        userId: req.params.userId
+                    };
+
                     // Update in the db
-                    User.edit({ userId: req.params.userId, ...req.body })
+                    User.edit(userEdited)
                         .then(message => res.status(201).json({ message }))
                         .catch(error => res.status(500).json({ error }));
                 })

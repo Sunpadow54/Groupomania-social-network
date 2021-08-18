@@ -1,8 +1,11 @@
 // User Controls
 // ------------------------- IMPORTS -------------------------
+/* const dotEnv = require('dotenv'); 
+dotEnv.config();  */
 
 const bcrypt = require('bcrypt'); // package password cryptage
 const jwToken = require('jsonwebtoken'); // package token
+const { encryptEmail } = require('../middleware/crypto.js'); // import crypto tool
 
 // ---- import User Model
 const User = require('../models/User');
@@ -18,7 +21,7 @@ exports.signup = (req, res, next) => {
         .then(passwordHashed => {
             // create user based on model User
             const newUser = new User({
-                email: req.body.email,
+                email: encryptEmail(req.body.email),
                 password: passwordHashed,
                 lastName: req.body.lastname,
                 firstName: req.body.firstname
@@ -34,13 +37,15 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     // Search User in db with email using User model
-    User.findOne({ email: req.body.email })
+
+    User.findOne({ email: encryptEmail(req.body.email) })
         .then(user => {
             // Compare password
             bcrypt.compare(req.body.password, user.pass)
                 .then(valid => {
                     // password error
                     if (!valid) { throw 'Incorrect Password' };
+                    
                     // success
                     res.status(200).json({
                         // send user _id & token auth
