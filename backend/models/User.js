@@ -84,7 +84,8 @@ User.findOne = (where) => {
 User.findAll = () => {
     // define the query
     const query = sql.format(`
-                SELECT id_user as userId, email, CONCAT(lastname, ' ', firstname) as name, is_active as isActive
+                SELECT id_user as userId, email, 
+                    CONCAT(lastname, ' ', firstname) as name, is_active as isActive
                 FROM users`);
     // ask SQL
     return new Promise((resolve, reject) => {
@@ -100,7 +101,6 @@ User.findAll = () => {
 
 User.ban = (idUser) => {
     // define the query
-    //const inserts = [user.isActive, user.id];
     const query = sql.format(`
                 Update users SET is_active = (
                     CASE
@@ -117,7 +117,7 @@ User.ban = (idUser) => {
             // error
             if (err || res.changedRows === 0) return reject('user cannot be updated');
             // success
-            resolve(res);
+            resolve('User has been moderated');
         })
     });
 };

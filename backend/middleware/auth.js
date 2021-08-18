@@ -2,14 +2,14 @@
 // ------------------------- IMPORTS -------------------------
 
 const jwToken = require('jsonwebtoken');
+const User = require('../models/User');
 //const dotEnv = require('dotenv'); // DotEnv
 
 // ============================================================
-// ---------------------- Middlewares -------------------------
+// ---------------------- Middleware -------------------------
 
-module.exports = (req, res, next) => {
+const authUser = (req, res, next) => {
     try {
-        //dotEnv.config() // invoking the dotenv config for secret key token
 
         // get the token from header and compare
         const token = req.headers.authorization.split(' ')[1];
@@ -23,6 +23,7 @@ module.exports = (req, res, next) => {
 
         // if id is ok
         else {
+            res.locals.userId = userId; // pass the baton !
             next();
         }
     }
@@ -34,3 +35,33 @@ module.exports = (req, res, next) => {
         });
     }
 };
+
+
+
+// used to check if user is not banned & grant permission access to admin or basic user
+const authRole = (role) => {
+    return (req, res, next) => {
+        User.findOne({ id_user: res.locals.userId })
+            .then(user => {
+                // user banned ?
+                if (user.is_active === 0) {
+                    throw 'You cannot enter'
+                };
+                // admin or basic user ?
+                const thisUserRole = user.is_admin === 1 ? 'admin' : 'basic';
+
+                if (thisUserRole !== role || thisUserRole !== 'admin') {
+                    throw 'Unautorized'
+                };
+
+                next();
+            })
+            .catch(error => res.status(401).json({ error }));
+
+    };
+};
+
+// ============================================================
+// ------------------------- EXPORT ---------------------------
+
+module.exports = { authUser, authRole };

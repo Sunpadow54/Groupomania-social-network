@@ -9,11 +9,11 @@ const Comment = require('../models/Comment');
 // ============================================================
 // -------------------------- CONTROLS ------------------------
 
-// ------------ POST
+
 exports.createPost = (req, res, next) => {
     const newPost = new Post({
         ...req.body.post,
-       // imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        // imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         userId: req.body.userId
     });
     // insert post in Db
@@ -91,7 +91,7 @@ exports.getOnePost = (req, res, next) => {
 
 
 exports.moderatePost = (req, res, next) => {
-    // get the post from id post
+    // change isactive bolean in db to hide posts
     Post.toogleActive(req.params.id)
         .then(() => res.status(201).json('this post has been moderated'))
         .catch(error => res.status(500).json({ error }));

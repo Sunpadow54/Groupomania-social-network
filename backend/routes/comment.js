@@ -15,7 +15,8 @@ const commentCtrl = require('../controllers/comment');
 
 // ============================================================
 // ------------------------- ROADS ----------------------------
-// ---- Posts roads
+
+
 router.post('/', /* auth,  */commentCtrl.createComment);
 router.put('/:id', /* auth,  */commentCtrl.editComment);
 router.delete('/:id', /* auth,  */commentCtrl.deleteComment);

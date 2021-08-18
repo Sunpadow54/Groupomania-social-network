@@ -15,9 +15,10 @@ const adminCtrl = require('../controllers/admin');
 
 // ============================================================
 // ------------------------- ROADS ----------------------------
-// ---- Posts roads
+
+
 router.get('/users', /* authUser, roleAdmin, */adminCtrl.getAllUsers);
-router.get('/users/:userId', /* authUser, roleAdmin, */adminCtrl.getMaskedPosts )
+router.get('/users/:userId', /* authUser, roleAdmin, */adminCtrl.getAllHidden)
 router.put('/users/:userId', /* authUser, roleAdmin, */adminCtrl.banUser);
 
 

@@ -2,6 +2,7 @@
 // ------------------------- IMPORTS -------------------------
 const sql = require('../config/db-connect');
 
+// ============================================================
 
 // constructor 
 class Comment {
@@ -13,7 +14,9 @@ class Comment {
     }
 }
 
-// to insert new Post 
+
+// ============================================================
+
 Comment.create = (newComment) => {
     // define sql query
     const inserts = [Object.keys(newComment), Object.values(newComment)];
@@ -31,8 +34,6 @@ Comment.create = (newComment) => {
 }
 
 
-// modify Post
-// ---- edit
 Comment.edit = (comment) => {
     // define the query
     const inserts = [comment.content, comment.postId];
@@ -49,7 +50,6 @@ Comment.edit = (comment) => {
 };
 
 
-// Delete
 Comment.delete = (commentId) => {
     // define the query
     const query = sql.format(`DELETE FROM comments WHERE id_comment=?`, commentId);
@@ -65,7 +65,6 @@ Comment.delete = (commentId) => {
 };
 
 
-// get all comments
 Comment.findAll = (postId) => {
     // define the query
     const query = sql.format(`
@@ -76,7 +75,7 @@ Comment.findAll = (postId) => {
             NATURAL JOIN users AS u
             WHERE c.id_post = ? AND u.is_active = 1 AND c.is_active = 1
             ORDER BY c.date_comment DESC`
-            , postId
+        , postId
     );
     // ask SQL
     return new Promise((resolve, reject) => {
@@ -91,7 +90,6 @@ Comment.findAll = (postId) => {
 };
 
 
-// get one comment
 Comment.findUserId = (id) => {
     // define the query
     const query = sql.format(`
@@ -156,5 +154,8 @@ Comment.findMasked = (idUser) => {
     })
 };
 
+
+// ============================================================
+// ------------------------- EXPORT ---------------------------
 
 module.exports = Comment;

@@ -2,6 +2,7 @@
 // ------------------------- IMPORTS -------------------------
 const sql = require('../config/db-connect');
 
+// ============================================================
 
 // constructor 
 class Post {
@@ -14,7 +15,9 @@ class Post {
     }
 }
 
-// to insert new Post 
+
+// ============================================================
+
 Post.create = (newPost) => {
     // define sql query
     const inserts = [Object.keys(newPost), Object.values(newPost)];
@@ -31,8 +34,6 @@ Post.create = (newPost) => {
 }
 
 
-// modify Post
-// ---- edit
 Post.edit = (post) => {
     // define the query
     const inserts = [post.title, post.content, post.imgUrl, post.postId, post.userId];
@@ -40,7 +41,7 @@ Post.edit = (post) => {
             UPDATE posts
             SET title=?, content=?, img=?
             WHERE id_post=? AND id_user=?`
-            , inserts);
+        , inserts);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
@@ -53,7 +54,6 @@ Post.edit = (post) => {
 };
 
 
-// Delete
 Post.delete = (post) => {
     // define the query
     const inserts = [post.postId, post.userId];
@@ -71,7 +71,6 @@ Post.delete = (post) => {
 };
 
 
-// get all posts
 Post.findAll = () => {
     // define the query
     const query = sql.format(`
@@ -95,7 +94,6 @@ Post.findAll = () => {
 };
 
 
-// get one post
 Post.findOne = (id) => {
     // define the query
     const query = sql.format(`
@@ -164,5 +162,8 @@ Post.findMasked = (idUser) => {
     })
 };
 
+
+// ============================================================
+// ------------------------- EXPORT ---------------------------
 
 module.exports = Post;

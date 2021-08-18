@@ -8,7 +8,7 @@ const Comment = require('../models/Comment');
 // ============================================================
 // -------------------------- CONTROLS ------------------------
 
-// ------------ POST
+
 exports.createComment = (req, res, next) => {
     const newComment = new Comment({
         ...req.body.comment,
