@@ -71,25 +71,28 @@ Post.delete = (post) => {
 };
 
 
+// find all post with number of comments and latest comment date
 Post.findAll = () => {
     // define the query
     const query = sql.format(`
+        SELECT 
+            p.id_post, p.title, p.content, p.img, p.date_post,
+            CONCAT(u.lastname, ' ', u.firstname) as author,
+            nbrComment, latestCommDate
+        FROM posts as p
+        JOIN users AS u ON p.id_user = u.id_user
+        LEFT JOIN (
                 SELECT 
-                    p.id_post, p.title, p.content, p.img, p.date_post,
-                    CONCAT(u.lastname, ' ', u.firstname) as author,
-                    nbrComment, latestCommDate
-                FROM posts as p
-                NATURAL JOIN users AS u
-                LEFT JOIN (
-                        SELECT 
-                            id_post, COUNT(*) as nbrComment, 
-                            MAX(date_comment) AS latestCommDate
-                        FROM comments
-                        WHERE is_active = 1
-                        GROUP BY id_post
-                    ) comments ON p.id_post = comments.id_post
-                WHERE p.is_active = 1 AND u.is_active = 1
-                ORDER BY COALESCE(p.date_post, latestCommDate) DESC`
+                    id_post, COUNT(*) as nbrComment, 
+                    MAX(date_comment) AS latestCommDate
+                FROM comments
+                JOIN users ON comments.id_user = users.id_user
+                WHERE comments.is_active = 1 AND users.is_active = 1
+                GROUP BY id_post
+            ) comments ON p.id_post = comments.id_post
+        WHERE p.is_active = 1 AND u.is_active = 1
+        ORDER BY COALESCE(p.date_post, latestCommDate) DESC
+        `
     );
 
     // ask SQL
