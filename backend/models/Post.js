@@ -74,14 +74,24 @@ Post.delete = (post) => {
 Post.findAll = () => {
     // define the query
     const query = sql.format(`
-            SELECT p.id_post, p.title, p.content, p.img, 
-                DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
-                CONCAT(u.lastname, ' ', u.firstname) as author
-            FROM posts AS p 
-            NATURAL JOIN users AS u 
-            WHERE u.is_active = 1 AND p.is_active = 1
-            ORDER BY p.date_post DESC`
+                SELECT 
+                    p.id_post, p.title, p.content, p.img, p.date_post,
+                    CONCAT(u.lastname, ' ', u.firstname) as author,
+                    nbrComment, latestCommDate
+                FROM posts as p
+                NATURAL JOIN users AS u
+                LEFT JOIN (
+                        SELECT 
+                            id_post, COUNT(*) as nbrComment, 
+                            MAX(date_comment) AS latestCommDate
+                        FROM comments
+                        WHERE is_active = 1
+                        GROUP BY id_post
+                    ) comments ON p.id_post = comments.id_post
+                WHERE p.is_active = 1 AND u.is_active = 1
+                ORDER BY COALESCE(p.date_post, latestCommDate) DESC`
     );
+
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
