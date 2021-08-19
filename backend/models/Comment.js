@@ -65,14 +65,16 @@ Comment.delete = (commentId) => {
 };
 
 
+// return all comments from a Post with authors full name
+// (if user & comment is active)
 Comment.findAll = (postId) => {
     // define the query
     const query = sql.format(`
-            SELECT c.id_comment, c.id_post, c.content_comment, 
+            SELECT c.id_comment, c.content_comment as content, 
                 DATE_FORMAT(c.date_comment, "%d/%m/%Y %T") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author
-            FROM comments AS c
-            NATURAL JOIN users AS u
+            FROM comments c
+            JOIN users u ON c.id_user = u.id_user
             WHERE c.id_post = ? AND u.is_active = 1 AND c.is_active = 1
             ORDER BY c.date_comment DESC`
         , postId
@@ -133,6 +135,7 @@ Comment.toogleActive = (idComment) => {
 };
 
 
+// return all unactives comments from a user 
 Comment.findMasked = (idUser) => {
     // define the query
     const query = sql.format(`

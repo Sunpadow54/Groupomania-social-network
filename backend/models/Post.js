@@ -71,7 +71,9 @@ Post.delete = (post) => {
 };
 
 
-// find all post with number of comments and latest comment date
+// find all Posts with authors full name & number of comments & latest comment date
+// ordered by latest post date or comment date
+// (check if post/comment/user is active)
 Post.findAll = () => {
     // define the query
     const query = sql.format(`
@@ -114,7 +116,7 @@ Post.findOne = (id) => {
                 DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM posts AS p
-            NATURAL JOIN users AS u
+            JOIN users AS u ON p.id_user = u.id_user
             WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
             `, id
     );
@@ -154,6 +156,7 @@ Post.toogleActive = (idPost) => {
 };
 
 
+// return all unactives post from a user 
 Post.findMasked = (idUser) => {
     // define the query
     const query = sql.format(`
