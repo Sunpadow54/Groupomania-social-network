@@ -4,6 +4,7 @@
 // ---- import Models
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
+const Vote = require('../models/Vote');
 
 
 // ============================================================
@@ -88,6 +89,54 @@ exports.getOnePost = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+
+exports.vote = (req, res, next) => {
+    // search if the user has already vote for the post, and what
+    Vote.findOne({ postId: req.params.id, userId: req.body.userId })
+        .then(oldVote => {
+
+            let hasAlreadyVote = oldVote ? oldVote.vote : false;
+
+            // --- user has never vote
+            if (!hasAlreadyVote) {
+                const newVote = new Vote({
+                    vote: req.body.vote,
+                    postId: req.params.id,
+                    userId: req.body.userId
+                });
+                // insert this new vote in db
+                Vote.create(newVote)
+                    .then(message => res.status(201).json({ message }))
+                    .catch(error => res.status(500).json({ error }));
+            }
+
+            // --- user voted the same thing as before
+            if (hasAlreadyVote !== false && hasAlreadyVote === req.body.vote) {
+                // delete/reset vote
+                Vote.delete({
+                    postId: req.params.id,
+                    userId: req.body.userId
+                })
+                    .then(message => res.status(201).json({ message }))
+                    .catch(error => res.status(500).json({ error }));
+            }
+
+            // --- user vote is different from before
+            if (hasAlreadyVote !== false && hasAlreadyVote !== req.body.vote) {
+                // update the vote
+                Vote.change({
+                    vote: req.body.vote,
+                    postId: req.params.id,
+                    userId: req.body.userId
+                })
+                    .then(message => res.status(201).json({ message }))
+                    .catch(error => res.status(500).json({ error }));
+            }
+        })
+        .catch(error => res.status(500).json({ error }));
+};
+
 
 
 exports.moderatePost = (req, res, next) => {

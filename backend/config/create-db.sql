@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS posts
     title VARCHAR(100) NOT NULL,
     content TEXT,
     img VARCHAR(250),
-    CONSTRAINT fk_id_user_posts
+    CONSTRAINT fk_id_user_p
         FOREIGN KEY (id_user)
         REFERENCES users(id_user) ON DELETE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
@@ -34,10 +34,25 @@ CREATE TABLE IF NOT EXISTS comments
     is_active BOOLEAN DEFAULT 1, 
     date_comment DATETIME NOT NULL, 
     content_comment TEXT NOT NULL,
-    CONSTRAINT fk_id_post
+    CONSTRAINT fk_id_post_c
         FOREIGN KEY (id_post)
         REFERENCES posts(id_post) ON DELETE CASCADE,
-    CONSTRAINT fk_id_user
+    CONSTRAINT fk_id_user_c
+        FOREIGN KEY (id_user)
+        REFERENCES users(id_user) ON DELETE SET NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+
+CREATE TABLE IF NOT EXISTS votes
+(
+    id_vote BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_post INT NOT NULL,
+    id_user INT,
+    vote ENUM('like', 'dislike') NOT NULL,
+    CONSTRAINT fk_id_post_v
+        FOREIGN KEY (id_post)
+        REFERENCES posts(id_post) ON DELETE CASCADE,
+    CONSTRAINT fk_id_user_v
         FOREIGN KEY (id_user)
         REFERENCES users(id_user) ON DELETE SET NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
