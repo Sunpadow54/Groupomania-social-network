@@ -19,7 +19,7 @@ const adminCtrl = require('../controllers/admin');
 
 router.get('/users', /* authUser, roleAdmin, */adminCtrl.getAllUsers);
 router.get('/users/:userId', /* authUser, roleAdmin, */adminCtrl.getAllHidden)
-router.put('/users/:userId', /* authUser, roleAdmin, */adminCtrl.banUser);
+router.put('/users/:userId/ban', /* authUser, roleAdmin, */adminCtrl.banUser);
 
 
 // ============================================================
