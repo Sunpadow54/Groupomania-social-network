@@ -79,19 +79,26 @@ Post.findAll = () => {
     const query = sql.format(`
         SELECT 
             p.id_post, p.title, p.content, p.img, p.date_post,
-            CONCAT(u.lastname, ' ', u.firstname) as author,
-            nbrComment, latestCommDate
-        FROM posts as p
+            CONCAT(u.lastname, ' ', u.firstname) AS author,
+            nbrComment, latestCommDate, likes, dislikes
+        FROM posts AS p
         JOIN users AS u ON p.id_user = u.id_user
         LEFT JOIN (
-                SELECT 
-                    id_post, COUNT(*) as nbrComment, 
-                    MAX(date_comment) AS latestCommDate
-                FROM comments
-                JOIN users ON comments.id_user = users.id_user
-                WHERE comments.is_active = 1 AND users.is_active = 1
-                GROUP BY id_post
+                SELECT c.id_post, 
+                    COUNT(*) AS nbrComment, 
+                    MAX(c.date_comment) AS latestCommDate
+                FROM comments c
+                JOIN users u ON c.id_user = u.id_user
+                WHERE c.is_active = 1 AND u.is_active = 1
+                GROUP BY c.id_post
             ) comments ON p.id_post = comments.id_post
+        JOIN (
+            SELECT id_post,
+                COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
+                COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
+            FROM votes 
+            GROUP BY id_post
+        ) votes ON p.id_post = votes.id_post
         WHERE p.is_active = 1 AND u.is_active = 1
         ORDER BY COALESCE(p.date_post, latestCommDate) DESC
         `
@@ -114,9 +121,17 @@ Post.findOne = (id) => {
     const query = sql.format(`
             SELECT p.id_post, p.id_user, p.title, p.content, p.img, 
                 DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
-                CONCAT(u.lastname, ' ', u.firstname) as author
+                CONCAT(u.lastname, ' ', u.firstname) as author,
+                likes, dislikes
             FROM posts AS p
             JOIN users AS u ON p.id_user = u.id_user
+            JOIN (
+                SELECT id_post,
+                    COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
+                    COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
+                FROM votes 
+                GROUP BY id_post
+            ) votes ON p.id_post = votes.id_post
             WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
             `, id
     );
