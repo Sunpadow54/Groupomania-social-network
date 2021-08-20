@@ -13,7 +13,13 @@ const User = require('../models/User');
 
 exports.getProfile = (req, res, next) => {
     User.findOne({ id_user: req.params.userId })
-        .then(user => res.status(201).json(user))
+        .then(user => {
+            userData = {
+                lastname: user.lastname,
+                firstname: user.firstname
+            }
+            res.status(201).json(userData);
+        })
         .catch(error => res.status(500).json({ error }));
 }
 

@@ -47,6 +47,7 @@ Post.edit = (post) => {
         sql.query(query, (err, res) => {
             // error
             if (err) return reject(err.sqlMessage);
+            if (res.changedRows === 0) return reject('Post has not been updated');
             // success
             resolve('Post modified with success');
         });
