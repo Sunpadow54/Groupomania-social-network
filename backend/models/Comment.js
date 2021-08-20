@@ -36,13 +36,15 @@ Comment.create = (newComment) => {
 
 Comment.edit = (comment) => {
     // define the query
-    const inserts = [comment.content, comment.postId];
-    const query = sql.format(`UPDATE comments SET content_comment=? WHERE id_post=?`, inserts);
+    const inserts = [comment.content, comment.commentId];
+    const query = sql.format(`UPDATE comments SET content_comment=? WHERE id_comment=?`, inserts);
+    console.log(query);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
             if (err) return reject(err.sqlMessage);
+            if (res.changedRows === 0) return reject('Comment has not been updated');
             // success
             resolve('Comment modified with success');
         });
@@ -92,12 +94,12 @@ Comment.findAll = (postId) => {
 };
 
 
-Comment.findUserId = (id) => {
+Comment.findUserId = (idComment) => {
     // define the query
     const query = sql.format(`
             SELECT id_user
             FROM comments WHERE id_comment=?
-            `, id
+            `, idComment
     );
     // ask SQL
     return new Promise((resolve, reject) => {

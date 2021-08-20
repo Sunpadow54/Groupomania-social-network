@@ -32,8 +32,8 @@ exports.editComment = (req, res, next) => {
 
             // the user is the author
             const editedComment = {
-                content: req.body.comment.content,
-                postId: req.body.comment.postId
+                content: req.body.content,
+                commentId: req.params.id
             };
             // modify in db
             Comment.edit(editedComment)
