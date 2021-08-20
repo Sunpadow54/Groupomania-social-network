@@ -92,7 +92,7 @@ Post.findAll = () => {
                 WHERE c.is_active = 1 AND u.is_active = 1
                 GROUP BY c.id_post
             ) comments ON p.id_post = comments.id_post
-        JOIN (
+        LEFT JOIN (
             SELECT id_post,
                 COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
                 COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
