@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS votes
     id_post INT NOT NULL,
     id_user INT,
     vote ENUM('like', 'dislike') NOT NULL,
+    CONSTRAINT unique_vote UNIQUE (id_post, id_user),
     CONSTRAINT fk_id_post_v
         FOREIGN KEY (id_post)
         REFERENCES posts(id_post) ON DELETE CASCADE,
