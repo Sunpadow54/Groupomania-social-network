@@ -71,7 +71,7 @@ Post.delete = (post) => {
 };
 
 
-// find all Posts with authors full name & number of comments & latest comment date
+// find all Posts with authors full name & number of comments & latest comment date & vote
 // ordered by latest post date or comment date
 // (check if post/comment/user is active)
 Post.findAll = () => {
@@ -81,8 +81,8 @@ Post.findAll = () => {
             p.id_post, p.title, p.content, p.img, p.date_post,
             CONCAT(u.lastname, ' ', u.firstname) AS author,
             nbrComment, latestCommDate, likes, dislikes
-        FROM posts AS p
-        JOIN users AS u ON p.id_user = u.id_user
+        FROM posts p
+        JOIN users u ON p.id_user = u.id_user
         LEFT JOIN (
                 SELECT c.id_post, 
                     COUNT(*) AS nbrComment, 
@@ -125,7 +125,7 @@ Post.findOne = (id) => {
                 likes, dislikes
             FROM posts AS p
             JOIN users AS u ON p.id_user = u.id_user
-            JOIN (
+            LEFT JOIN (
                 SELECT id_post,
                     COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
                     COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
@@ -139,7 +139,8 @@ Post.findOne = (id) => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
-            if (err || res.length === 0) return reject('This post does not exist');
+            if (err) return reject(err);
+            if (res.length === 0) return reject('This post does not exist');
             // success
             resolve(res[0]);
         });
