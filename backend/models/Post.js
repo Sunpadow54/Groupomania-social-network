@@ -100,7 +100,7 @@ Post.findAll = () => {
             GROUP BY id_post
         ) votes ON p.id_post = votes.id_post
         WHERE p.is_active = 1 AND u.is_active = 1
-        ORDER BY COALESCE(p.date_post, latestCommDate) DESC
+        ORDER BY COALESCE(latestCommDate, p.date_post) DESC
         `
     );
 
