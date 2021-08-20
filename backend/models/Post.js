@@ -95,8 +95,8 @@ Post.findAll = () => {
             ) comments ON p.id_post = comments.id_post
         LEFT JOIN (
             SELECT id_post,
-                COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
-                COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
+                SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
+                SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
             FROM votes 
             GROUP BY id_post
         ) votes ON p.id_post = votes.id_post
@@ -128,8 +128,8 @@ Post.findOne = (id) => {
             JOIN users AS u ON p.id_user = u.id_user
             LEFT JOIN (
                 SELECT id_post,
-                    COUNT(CASE WHEN vote = 'like' THEN 1 ELSE null END) AS likes,
-                    COUNT(CASE WHEN vote = 'dislike' THEN 1 ELSE null END) AS dislikes
+                    SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
+                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
                 FROM votes 
                 GROUP BY id_post
             ) votes ON p.id_post = votes.id_post
