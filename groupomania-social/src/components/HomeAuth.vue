@@ -59,12 +59,6 @@
                 }
             }
         },
-        props: {
-            actionMsg: {
-                type: String,
-                default: 'connectez-vous'
-            }
-        },
         methods: {
             switchMode() {
                 this.mode.login = this.mode.login ? false : true;
