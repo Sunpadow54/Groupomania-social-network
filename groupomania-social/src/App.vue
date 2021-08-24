@@ -1,24 +1,11 @@
 <template>
-        <Home />
-<!-- 	<header id="nav" class="container">
-        <ul class="nav justify-content-center text-center">
-            <li class="nav-item w-50 "><router-link to="/login" class="nav-link fw-bold text-brand-primary border border-4">Connection</router-link></li>
-            <li class="nav-item w-50 "><router-link to="/signup" class="nav-link fw-bold text-brand-primary border border-4">Inscription</router-link></li>
-        </ul>
-	</header>
-    <router-view /> -->
+    <div>
+        <router-view />
+    </div>
 </template>
 
 
-<script>
-    // Import Components
-    import Home from "@/views/Home.vue";
 
-    // export
-    export default {
-        components: { Home },
-    };
-</script>
 
 
 <style>
@@ -37,6 +24,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+    background-color: grey;
 }
 
 #nav a.router-link-exact-active {
