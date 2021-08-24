@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "backend-groupomania",
   "version": "1.0.0",
   "description": "Api social internal social network of Groupomania",
   "main": "server.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Sunpadow54/ElsaDessarps_7_02082021.git"
   },
   "author": "Sunpadown54",
   "license": "ISC",
