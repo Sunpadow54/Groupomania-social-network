@@ -7,6 +7,12 @@ const routes = [
         name: 'Home',
         component: Home
     },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('../views/Dashboard.vue')
+    }
+
 
 ]
 
@@ -14,5 +20,7 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+// auth
 
 export default router

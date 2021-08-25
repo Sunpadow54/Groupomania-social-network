@@ -23,7 +23,8 @@ User.create = (newUser) => {
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
             // error
-            if (err) return reject(err.sqlMessage);
+            if (err && err.sqlMessage.startsWith('Duplicata')) return reject('This email already exist');
+            if (err) return reject(err);
             // success
             resolve('User is successfully created');
         });

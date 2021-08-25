@@ -25,28 +25,8 @@
             </header>
             <!-- MAIN formulaire-->
             <main class="home container-mb mb-5">
-                <form class="container">
-                    <div class="form-floating mb-3">
-                        <input type="email" id="email" class="form-control" placeholder="email@example.com" required>
-                        <label for="email" class="form-label">Email</label>
-                    </div>
-                    <!-- start signup only-->
-                    <div class="form-floating mb-3" v-if="!mode.login">
-                        <input type="text" id="lastname" class="form-control" placeholder="" required>
-                        <label for="lastname" class="form-label">Nom</label>
-                    </div>
-                    <div class="form-floating mb-3" v-if="!mode.login">
-                        <input type="text" id="firstname" class="form-control" placeholder="" required>
-                        <label for="firstname" class="form-label">Prénom</label>
-                    </div>
-                    <!-- end signup -->
-                    <div class="form-floating mb-3">
-                        <input type="password" id="password" class="form-control" placeholder="Password" required>
-                        <label for="password" class="form-label">Mot de passe</label>
-                    </div>
-                    <input type="submit" class="btn w-100 btn-primary py-2" v-if="mode.login" value="se connecter">
-                    <input type="submit" class="btn w-100 btn-primary py-2" v-if="!mode.login" value="S'inscrire">
-                </form>
+                <FormSignup v-if="!mode.login" />
+                <FormLogin v-if="mode.login" />
             </main>
         </div>
     </div>
@@ -54,22 +34,31 @@
 
 
 <script>
+    import FormSignup from '@/components/FormSignup.vue'
+    import FormLogin from '@/components/FormLogin.vue'
+    
     export default {
-        name: "NavAuth",
+        name: "Home",
+        components: { FormSignup, FormLogin },
         data() {
             return {
                 mode: {
                     login: true,
-                }
+                },
             }
         },
+        computed: {
+            
+        },
         methods: {
+            // switch between Login / signup mode
             switchMode() {
                 this.mode.login = this.mode.login ? false : true;
             },
         }
     };
 </script>
+
 
 <style scoped>
     #auth {
@@ -79,11 +68,5 @@
         background-color: var(--brand-color-primary);
         color: #ffff;
         border-color: var(--brand-color-primary) !important;
-    }
-    input[type="submit"] {
-        background-color: var(--brand-color-primary);
-    }
-    input[type="submit"]:active, button[type="submit"]:hover {
-        background-color: var(--brand-color-secondary)
     }
 </style>
