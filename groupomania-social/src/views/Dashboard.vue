@@ -1,17 +1,24 @@
 <template>
-    <div>
-        hello user !
-        <p>{{name}}</p>
-    </div>
+    <HeaderNav />
+    <main class="container">
+        <AllPosts />
+    </main>
 </template>
 
 <script>
+    import HeaderNav from '@/components/HeaderNav.vue'
+    import AllPosts from '@/components/AllPosts.vue'
+
     export default {
-        name: "Home",
-        props: ['name'],
+        name: "Dashboard",
+        components: { HeaderNav, AllPosts},
     }
+    
 </script>
 
-<style>
-
+<style scoped>
+    main {
+        max-width:1000px;
+        margin-top: 65px;
+    }
 </style>

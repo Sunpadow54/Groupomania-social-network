@@ -79,9 +79,11 @@ Post.findAll = () => {
     // define the query
     const query = sql.format(`
         SELECT 
-            p.id_post, p.title, p.content, p.img, p.date_post,
+            p.id_post, p.title, p.content, p.img,
+            DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") AS date,
             CONCAT(u.lastname, ' ', u.firstname) AS author,
-            nbrComment, latestCommDate, likes, dislikes
+            nbrComment, likes, dislikes,
+            DATE_FORMAT(latestCommDate, "%d/%m/%Y% %H:%i:%s") AS latestCom
         FROM posts p
         JOIN users u ON p.id_user = u.id_user
         LEFT JOIN (
@@ -121,7 +123,7 @@ Post.findOne = (id) => {
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.id_user, p.title, p.content, p.img, 
-                DATE_FORMAT(p.date_post, "%d/%m/%Y %T") as date,
+                DATE_FORMAT(p.date_post, "%d/%m/%Y%T") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author,
                 likes, dislikes
             FROM posts AS p

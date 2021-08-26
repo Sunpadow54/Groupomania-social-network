@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <router-view />
-    </div>
+    <router-view />
 </template>
 
 
@@ -12,7 +10,7 @@
     /* ---- colors */
     :root {
         --brand-color-primary: #091f43;
-        --brand-color-secondary: #d1515a ;
+        --brand-color-secondary: #d1515a;
     }
 
     .text-brand-primary {
@@ -24,7 +22,8 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    background-color: grey;
+    background-color: #858585;
+    background: linear-gradient(184deg, #858585 0%, #cccccc 80%);
 }
 
 #nav a.router-link-exact-active {
@@ -32,18 +31,7 @@
     color: #ffff;
     border-color: var(--brand-color-primary) !important;
 }
-
-
-/* 
-#nav {
-	padding: 30px;
-}
-
-#nav a {
-	font-weight: bold;
-	color: #2c3e50;
-}
-
+/*
 #nav a.router-link-exact-active {
 	color: #42b983;
 } */
