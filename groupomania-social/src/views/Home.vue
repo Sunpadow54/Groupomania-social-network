@@ -25,7 +25,7 @@
             </header>
             <!-- MAIN formulaire-->
             <main class="home container-mb mb-5">
-                <FormSignup v-if="!mode.login" />
+                <FormSignup v-on:switchToLog="switchMode" v-if="!mode.login" />
                 <FormLogin v-if="mode.login" />
             </main>
         </div>
@@ -47,13 +47,10 @@
                 },
             }
         },
-        computed: {
-            
-        },
         methods: {
             // switch between Login / signup mode
-            switchMode() {
-                this.mode.login = this.mode.login ? false : true;
+            switchMode: function (){
+                this.mode.login = !this.mode.login ;
             },
         }
     };

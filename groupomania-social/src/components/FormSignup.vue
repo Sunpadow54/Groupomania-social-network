@@ -1,7 +1,7 @@
 <template>
 
     <form class="container">
-        <!-- <div v-if="errors" v-for="error of errors"> {{ Object.values(error)  }} </div> -->
+        <div v-if="errors"> {{ Object.values(error)  }} </div>
         <div class="form-floating mb-3">
             <input v-model="newUser.email" type="email" id="email" class="form-control" placeholder="email@example.com"  
                 required>
@@ -48,14 +48,15 @@
                 lastname: '',
                 firstname: ''
             };
+
             let errors = ref(null);
 
-            const addUser = () => {
+            const addUser = () => { 
                 store.dispatch('postData', { endpoint:'/auth/signup', data: newUser })
                     .then(res => {
-                        if (res.error) { throw res.error }
-                        // change mode putain !
-
+                        if (res.error) { throw res }
+                        // return to login
+                        context.emit('switchToLog');
                     })
                     .catch(err => {  errors.value = err });
             };
@@ -64,6 +65,7 @@
                 newUser,
                 addUser,
                 errors,
+                props
             }
         }
     };
