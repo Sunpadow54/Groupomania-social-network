@@ -1,5 +1,6 @@
 <template>
     <form class="container">
+        <div v-if="errors"> {{ errors }} </div>
         <div class="form-floating mb-3">
             <input v-model="user.email" type="email" id="email" class="form-control" placeholder="email@example.com"  
                 required>
@@ -15,45 +16,43 @@
 
         <input @click.prevent="logUser()" type="submit" class="btn w-100 btn-primary py-2" value="se connecter">
 
-        <div>
-            {{ result }}
-        </div>
-        <div v-if="error.length !== 0">
-            {{ error }}
-        </div>
     </form>
 </template>
 
 
 <script>
+    import { ref } from 'vue'
+    import { useStore } from 'vuex'
+
     export default {
         name: "FormLogin",
-        data() {
-            return {
-                user: {
-                    email: '',
-                    password: ''
-                },
-                error: [],
-            }
-        },
-        methods: {
-            // fetch user to get token
-            async logUser() {
 
-                fetch('http://localhost:3000/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.user)
-                })
-                    .then(response => response.json())
-                    .then(data => { 
-                        this.$router.push({ name: 'Dashboard' }) 
+        setup() {
+            const store = useStore();
+
+            let user = {
+                email: '',
+                password: ''
+            };
+            let errors = ref(null);
+
+            const logUser = () => {
+                store.dispatch('postData', { endpoint:'/auth/login', data: user })
+                    .then(res => {
+                        if(res.error) {
+                            throw res.error
+                        }
+                        if (res.token) { 
+                            this.$router.push({ name: 'Dashboard' }) 
+                        }
                     })
-                    .catch(err => { this.error = err });
+                    .catch(err => { errors.value = err } );
+            };
+
+            return {
+                user,
+                logUser,
+                errors
             }
         }
     }
