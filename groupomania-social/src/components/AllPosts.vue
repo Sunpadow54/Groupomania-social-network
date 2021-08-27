@@ -43,17 +43,20 @@
 
 <script>
     import {ref, onMounted } from 'vue'
+    import { useStore } from 'vuex'
 
     export default {
         name: 'AllPosts',
+
         setup() {
-            //const user = ref(null);
+            const store = useStore();
             const posts = ref(null);
 
+            // Function Fetch Post
             const getAllPosts = () => {
-                fetch('http://localhost:3000/api/posts')
-                    .then(res => res.json())
+                store.dispatch('getData','/posts' )
                     .then(data => {
+                        // change date into time passed
                         let data2 = data.map(el => {
                            return {
                                 ...el,
@@ -62,10 +65,11 @@
                             }
                         })
                         posts.value = data2
-                        console.log(data2);
                     })
+                    .catch(e => console.log(e))
             }
 
+            // Function Calc the time passed
             const passedTime = (datePost) => {
                 // if no comments
                 if (!datePost) {
@@ -92,7 +96,6 @@
                 }
 
                 // return the good string of time passed
-
                 if (findDiff(year) > 0) { 
                     let diff = findDiff(year);
                     return `${diff} ${diff === 1 ? 'an' : "ans"}` 
@@ -111,11 +114,10 @@
                 }
             }
 
+            // Render
             onMounted(() => {
                 getAllPosts();
             });
-
-
 
             return {
                 posts
