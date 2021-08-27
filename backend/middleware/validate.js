@@ -39,12 +39,15 @@ const validateSignUp = (req, res, next) => {
 
     // password or email is not good
     if (!checkErrors.isEmpty()) {
+        
         // create an array of error messages
-        const errors = checkErrors.array().map(error => {
-            return { [error.param + 'Error']: error.msg }
+        const error = checkErrors.array().map(error => {
+            return { error: 'inputs are not valid !' };
+            // return { [error.param + 'Error']: error.msg }
         });
+        
 
-        return res.status(418).json({ errors })
+        return res.status(418).json({ error })
     }
     // inputs are correct
     next();

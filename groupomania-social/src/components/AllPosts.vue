@@ -66,7 +66,7 @@
                         })
                         posts.value = data2
                     })
-                    .catch(e => console.log(e))
+                    .catch(err => console.log(err))
             }
 
             // Function Calc the time passed
