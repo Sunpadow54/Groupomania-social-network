@@ -1,9 +1,9 @@
 <template>
     <div>
-    <HeaderNav />
-    <main class="container">
-        <AllPosts />
-    </main>
+        <HeaderNav />
+        <main class="container">
+            <AllPosts />
+        </main>
     </div>
 </template>
 
@@ -20,7 +20,9 @@
 
 <style scoped>
     main {
-        max-width:1000px;
-        margin-top: 65px;
+        max-width:900px;
+    }
+    div {
+        background-color: #ebedf0;
     }
 </style>
