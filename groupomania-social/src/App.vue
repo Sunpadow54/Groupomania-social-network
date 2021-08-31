@@ -1,5 +1,6 @@
-<template>
+<template><v-app>
     <router-view />
+    </v-app>
 </template>
 
 
@@ -8,15 +9,15 @@
 
 <style>
     /* ---- colors */
-    :root {
+/*     :root {
         --brand-color-primary: #091f43;
         --brand-color-secondary: #d1515a;
     }
 
     .text-brand-primary {
         color: var(--brand-color-primary);
-    }
-
+    } */
+/* 
 #app {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -30,7 +31,7 @@
 	background-color: var(--brand-color-primary);
     color: #ffff;
     border-color: var(--brand-color-primary) !important;
-}
+} */
 /*
 #nav a.router-link-exact-active {
 	color: #42b983;

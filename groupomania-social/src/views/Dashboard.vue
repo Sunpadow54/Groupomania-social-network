@@ -1,8 +1,10 @@
 <template>
+    <div>
     <HeaderNav />
     <main class="container">
         <AllPosts />
     </main>
+    </div>
 </template>
 
 <script>
