@@ -49,41 +49,6 @@
       <!-- </v-col> -->
     </v-col>
   </v-row>
-  <!-- </v-container> -->
-  <!--  </v-app> -->
-
-  <!--     <div id="auth" class="d-flex flex-column justify-content-center align-items-center bg-dark">
-				<div>
-
-						<header id="nav">
-								<ul class="nav justify-content-center text-center">
-										<li class="nav-item w-50">
-												<button @click="switchMode"
-														:disabled="mode.login"
-														class="nav-link fw-bold text-brand-primary border border-4 w-100">Connection</button>
-										</li>
-										<li class="nav-item w-50">
-												<button @click="switchMode"
-														:disabled="!mode.login"
-														class="nav-link fw-bold text-brand-primary border border-4 w-100">Inscription</button>
-										</li>
-								</ul>
-								<div class="container py-5 text-center">
-										<img alt="Groupomania_logo" src="../assets/groupomania-logo_black.svg" class="img-fluid" />
-										<h1 class="h2 py-4"> Bienvenue sur votre réseau social </h1>
-
-										<h2 class="h3" v-if="mode.login">connectez-vous</h2>
-										<h2 class="h3" v-if="!mode.login">inscrivez-vous</h2>
-										<h3>{{ $store.state.user }}</h3>
-								</div>
-						</header>
-					
-						<main class="home container-mb mb-5">
-								<FormSignup v-if="!mode.login" v-on:switchToLog="switchMode"/>
-								<FormLogin v-if="mode.login" />
-						</main>
-				</div>
-		</div> -->
 </template>
 
 
