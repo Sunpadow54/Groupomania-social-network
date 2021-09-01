@@ -41,9 +41,7 @@ export default new Vuex.Store({
 			return new Promise((resolve, reject) => {
 				fetch(url + endpoint, {
 					method: "POST",
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
+
 					body: data,
 				})
 					.then((res) => {

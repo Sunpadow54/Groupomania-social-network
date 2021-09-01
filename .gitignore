@@ -1,3 +1,6 @@
 node_modules
 .env
+backend/images/*.png
+backend/images/*.jpg
+backend/images/*.webp
 test.rest

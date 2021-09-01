@@ -71,11 +71,10 @@ export default {
 
         /* functions */
         const createPost = () => {
-
             const newData = new FormData();
                 newData.append('post', JSON.stringify(post));
-                newData.append('image', image);
-
+                newData.append('image', image.value);
+            // store actions
             store.dispatch("postDataWithFile", {
 					endpoint: "/posts",
 					data: newData,
