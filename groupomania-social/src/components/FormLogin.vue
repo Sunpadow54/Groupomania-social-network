@@ -63,7 +63,8 @@ export default {
 				.dispatch("postData", { 
                     endpoint: "/auth/login", 
                     data: user, 
-                    hasAuth: false
+                    hasAuth: false,
+                    file: false
                 })
 				.then((res) => {
 					if (res.error && res.error === "Incorrect Password") {

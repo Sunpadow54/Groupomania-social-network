@@ -9,8 +9,8 @@ export default new Vuex.Store({
 		token: "",
 		userId: "",
 		username: "",
-        isAdmin: false,
-        isActive: false,
+		isAdmin: false,
+		isActive: false,
 	},
 
 	mutations: {
@@ -18,62 +18,58 @@ export default new Vuex.Store({
 			state.token = data.token;
 			state.username = data.username;
 			state.userId = data.userId;
-            state.isAdmin = data.isAdmin;
-            state.isActive = data.isActive
+			state.isAdmin = data.isAdmin;
+			state.isActive = data.isActive;
 		},
 	},
 
 	actions: {
 		getData(context, endpoint) {
 			return new Promise((resolve, reject) => {
-                console.log(context.getters.getToken);
 				fetch(url + endpoint, {
-                    method: "GET",
-                    headers: {
-                        Authorization: "Bearer " + context.getters.getToken,
-                    }
-                })
-                    .then((res) => {
-                        if (!res.ok) {
-                            reject(
-                                `Désolé, il est impossible d'accéder à l'API. ( erreur status: ${res.status})`
-                            );
-                        }
-                        resolve(res.json());
-                    });
+					method: "GET",
+					headers: {
+						Authorization: "Bearer " + context.getters.getToken,
+					},
+				}).then((res) => {
+					if (!res.ok) {
+						reject(
+							`Désolé, il est impossible d'accéder à l'API. ( erreur status: ${res.status})`
+						);
+					}
+					resolve(res.json());
+				});
 			});
 		},
 
-		postDataWithFile(context, { endpoint, data }) {
-			return new Promise((resolve, reject) => {
-				fetch(url + endpoint, {
-					method: "POST",
+		postData(context, { endpoint, data, hasAuth, file }) {
+			const authorize = hasAuth
+				? { Authorization: "Bearer " + context.getters.getToken }
+				: null;
 
-					body: data,
-				})
-					.then((res) => {
-						resolve(res.json());
-					})
-					.catch((err) => {
-						reject(err.json());
-					});
-			});
-		},
-		postData(context, { endpoint, data, hasAuth }) {
-
-            const authorize = hasAuth ? 
-                { Authorization: "Bearer " + context.getters.getToken }
-                : null
+			let formattedData, headers;
+			if (typeof file !== "undefined") {
+				formattedData = new FormData();
+				formattedData.append("post", JSON.stringify(data));
+				formattedData.append("image", file);
+				headers = { ...authorize };
+			}
+			if (!file) {
+				formattedData = JSON.stringify(data);
+				headers = {
+					Accept: "application/json",
+					...authorize,
+					"Content-Type": "application/json",
+				};
+			}
 
 			return new Promise((resolve) => {
 				fetch(url + endpoint, {
 					method: "POST",
 					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        ...authorize
+						...headers,
 					},
-					body: JSON.stringify(data),
+					body: formattedData,
 				}).then((res) => {
 					resolve(res.json());
 				});
@@ -82,9 +78,9 @@ export default new Vuex.Store({
 	},
 
 	getters: {
-		isLoggedIn: (state) => !!state.token ,
-        isActiveUser: (state) => !!state.isActive,
-        getToken: (state) => state.token
+		isLoggedIn: (state) => !!state.token,
+		isActiveUser: (state) => !!state.isActive,
+		getToken: (state) => state.token,
 	},
 
 	modules: {},
