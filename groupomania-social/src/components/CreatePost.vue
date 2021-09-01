@@ -76,7 +76,7 @@ export default {
                 newData.append('post', JSON.stringify(post));
                 newData.append('image', image);
 
-            store.dispatch("postData", {
+            store.dispatch("postDataWithFile", {
 					endpoint: "/posts",
 					data: newData,
 				})

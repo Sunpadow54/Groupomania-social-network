@@ -33,16 +33,12 @@ export default new Vuex.Store({
 			})
 		},
 
-		postData(context, { endpoint, data }) {
-           
-            
+		postDataWithFile(context, { endpoint, data }) {
 			return new Promise((resolve, reject) => {
 				fetch(url + endpoint, {
 					method: 'POST',
 					headers: {
-                    
                         'Content-Type': 'multipart/form-data'
-
 					},
 					body: data
 				})
@@ -53,7 +49,22 @@ export default new Vuex.Store({
                         reject(err.json())
                     })
 			})
-		}
+		},
+        postData(context, { endpoint, data } ) {
+            return new Promise((resolve) => {
+                fetch(url + endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => {
+                        resolve(res.json())
+                    })
+            })
+        },
 	},
 	modules: {
 	}

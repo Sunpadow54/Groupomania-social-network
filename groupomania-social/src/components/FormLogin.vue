@@ -61,7 +61,7 @@ export default {
         /* logique */
 		const logUser = () => {
 			store
-				.dispatch("postData", { endpoint: "/auth/login", data: JSON.stringify(user) })
+				.dispatch("postData", { endpoint: "/auth/login", data: user })
 				.then((res) => {
 					if (res.error && res.error === "Incorrect Password") {
 						console.log("pas bon mp");

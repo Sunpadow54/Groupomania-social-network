@@ -88,7 +88,7 @@ export default {
 			store
 				.dispatch("postData", {
 					endpoint: "/auth/signup",
-					data: JSON.stringify(newUser),
+					data: newUser,
 				})
 				.then((res) => {
 					if (res.error && res.error === "This email already exist") {
