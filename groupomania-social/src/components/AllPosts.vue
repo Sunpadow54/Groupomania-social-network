@@ -12,7 +12,7 @@
 		>
 			<div class="d-flex">
 				<!-- <v-tab-item> -->
-				<v-card elevation="1" tile class="order-2 flex-shrink-1 flex-grow-0 overflow-hidden">
+				<v-card grow elevation="1" tile class="order-2 overflow-hidden" width="100%">
                     <!-- card top -->
 					<v-card-text class="d-flex align-center pa-2">
 						<h3 class="body-1 me-3 text-capitalize">
@@ -31,7 +31,7 @@
 					</a>
                     <!-- card image -->
 					<v-img
-						src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+						:src="post.img"
 						height="330px"
 					></v-img>
                     <!-- card bottom -->

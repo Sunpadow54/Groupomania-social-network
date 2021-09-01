@@ -3,7 +3,7 @@
         <HeaderNav v-on:switchToCreate="switchCreate" />
         <main class="container">
             <AllPosts v-if="!modeCreatePost" />
-            <CreatePost v-if="modeCreatePost" />
+            <CreatePost v-if="modeCreatePost" v-on:switchToCreate="switchCreate" />
         </main>
     </div>
 </template>

@@ -55,7 +55,7 @@ import { ref } from "@vue/composition-api";
 
 export default {
 	name: "CreatePost",
-	setup(context, { root }) {
+	setup(context, { emit, root }) {
         /* variables */
 		const store = root.$store; // access to store in setup()
 
@@ -79,11 +79,18 @@ export default {
 					endpoint: "/posts",
 					data: newData,
 				})
-                .then((res) => console.log(res))
+                .then((res) => {
+                    showCreatePost(false)
+                    console.log(res)
+                })
                 .catch((err) => console.log({err}));
         }
 
-    
+        const showCreatePost = (isShowned) => {
+			emit("switchToCreate", isShowned);
+		};
+
+        /* return data */
 		return {
 			post,
 			valid,
