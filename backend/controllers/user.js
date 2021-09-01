@@ -57,7 +57,8 @@ exports.login = (req, res, next) => {
                             process.env.TOKEN_KEY,
                             // 3rd param : to configure duration of the token
                             { expiresIn: '24h' }
-                        )
+                        ),
+                        username: user.lastname + ' ' + user.firstname
                     });
                 })
                 .catch(error => res.status(401).json({ error }));

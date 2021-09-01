@@ -8,9 +8,18 @@
 				height="auto"
 			/>
 		</v-toolbar-title>
+
 		<v-spacer></v-spacer>
 
-		<v-btn @click="showCreatePost(true)" class="mx-2" small icon color="white">
+		<v-toolbar-title> {{ userName }} </v-toolbar-title>
+
+		<v-btn
+			@click="showCreatePost(true)"
+			class="mx-2"
+			small
+			icon
+			color="white"
+		>
 			<v-icon dark> mdi-plus </v-icon>
 		</v-btn>
 
@@ -21,27 +30,25 @@
 </template>
 
 <script>
-
 export default {
 	name: "HeaderNav",
 
-    setup(context, { emit }) {
-        
-        /* let modeCreatePost = false; */
-        const showCreatePost = (isShowned) => {
-            emit("switchToCreate", isShowned);
-        }
-        return {
-            showCreatePost,
-            /* modeCreatePost */
-        }
-    }
+	setup(context, { emit, root }) {
+		/* variables */
+		const store = root.$store; // access to store in setup()
+		const userName = store.state.username;
+		console.log(userName);
 
+		/* functions */
+		const showCreatePost = (isShowned) => {
+			emit("switchToCreate", isShowned);
+		};
+
+		/* return data */
+		return {
+			showCreatePost,
+			userName,
+		};
+	},
 };
 </script>
-
-<style scoped>
-/* header {
-  background-color: #2a2a2e;
-} */
-</style>

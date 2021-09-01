@@ -33,7 +33,6 @@
 	</v-form>
 </template>
 
-
 <script>
 import { ref } from "@vue/composition-api";
 
@@ -41,7 +40,7 @@ export default {
 	name: "FormLogin",
 
 	setup(context, { root }) {
-        /* variables */
+		/* variables */
 		const store = root.$store; // access to store in setup()
 		const router = root.$router;
 
@@ -58,7 +57,7 @@ export default {
 			password: "",
 		};
 
-        /* logique */
+		/* logique */
 		const logUser = () => {
 			store
 				.dispatch("postData", { endpoint: "/auth/login", data: user })
@@ -74,7 +73,12 @@ export default {
 						errors.value = "Cet utilisateur n'existe pas";
 					}
 					if (res.token) {
-						router.push({ name: "Dashboard" });
+						// mutate state
+						store.commit("auth_success", res);
+						// redirect
+						if (store.state.token) {
+							router.push({ name: "Dashboard" });
+						}
 					}
 				})
 				.catch((err) => {
@@ -82,7 +86,7 @@ export default {
 				});
 		};
 
-        /* setup return */
+		/* setup return */
 		return {
 			user,
 			logUser,

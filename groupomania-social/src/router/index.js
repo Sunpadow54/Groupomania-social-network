@@ -1,26 +1,52 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+import store from "../store/index";
+//import { IS_USER_AUTHENTICATE_GETTER } from '../store/index'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue')
-  }
-]
+	{
+		path: "/",
+		name: "Home",
+		component: Home,
+		meta: { requireAuth: false },
+	},
+	{
+		path: "/dashboard",
+		name: "Dashboard",
+		component: () =>
+			import(/* webpackChunkName: "about" */ "../views/Dashboard.vue"),
+		meta: { requireAuth: true },
+	},
+];
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+	mode: "history",
+	base: process.env.BASE_URL,
+	routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+    // user is not loggIn
+	if (
+		to.meta.requireAuth &&
+		!store.getters.isLoggedIn
+	) {
+		next("/");
+	} 
+    // user is Logged
+    else if (
+		!to.meta.requireAuth &&
+		store.getters.isLoggedIn
+	) {
+		next("/dashboard");
+	} 
+
+    else {
+		next();
+	}
+});
+
+export default router;
