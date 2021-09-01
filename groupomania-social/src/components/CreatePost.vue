@@ -79,10 +79,10 @@ export default {
 					endpoint: "/posts",
 					data: newData,
 				})
-                .then((res) => {
+                .then(() => 
                     showCreatePost(false)
-                    console.log(res)
-                })
+                    
+                )
                 .catch((err) => console.log({err}));
         }
 

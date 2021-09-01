@@ -89,6 +89,7 @@ export default {
 				.dispatch("postData", {
 					endpoint: "/auth/signup",
 					data: newUser,
+                    hasAuth: false
 				})
 				.then((res) => {
 					if (res.error && res.error === "This email already exist") {

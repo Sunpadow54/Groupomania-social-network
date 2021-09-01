@@ -18,12 +18,12 @@ const postCtrl = require('../controllers/post');
 // ------------------------- ROADS ----------------------------
 
 
-router.post('/',/* authUser, roleUser, */ /* auth,  */multer, postCtrl.createPost);
-router.put('/:id', /* auth,  */postCtrl.editPost);
-router.delete('/:id', /* auth,  */postCtrl.deletePost);
-router.get('/', /* auth,  */postCtrl.getAllPosts);
-router.get('/:id', /* auth,  */postCtrl.getOnePost);
-router.post('/:id/vote', /* auth,  */postCtrl.vote);
+router.post('/', authUser, multer, postCtrl.createPost);
+router.put('/:id', authUser, postCtrl.editPost);
+router.delete('/:id', authUser, postCtrl.deletePost);
+router.get('/', authUser, postCtrl.getAllPosts);
+router.get('/:id', authUser, postCtrl.getOnePost);
+router.post('/:id/vote', authUser, postCtrl.vote);
 
 router.put('/:id/moderate', /* authUser, */ /* authRole('admin'),  *//* auth,  */postCtrl.moderatePost);
 

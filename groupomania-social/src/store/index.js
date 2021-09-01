@@ -26,14 +26,21 @@ export default new Vuex.Store({
 	actions: {
 		getData(context, endpoint) {
 			return new Promise((resolve, reject) => {
-				fetch(url + endpoint).then((res) => {
-					if (!res.ok) {
-						reject(
-							`Désolé, il est impossible d'accéder à l'API. ( erreur status: ${res.status})`
-						);
-					}
-					resolve(res.json());
-				});
+                console.log(context.getters.getToken);
+				fetch(url + endpoint, {
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + context.getters.getToken,
+                    }
+                })
+                    .then((res) => {
+                        if (!res.ok) {
+                            reject(
+                                `Désolé, il est impossible d'accéder à l'API. ( erreur status: ${res.status})`
+                            );
+                        }
+                        resolve(res.json());
+                    });
 			});
 		},
 
@@ -52,13 +59,19 @@ export default new Vuex.Store({
 					});
 			});
 		},
-		postData(context, { endpoint, data }) {
+		postData(context, { endpoint, data, hasAuth }) {
+
+            const authorize = hasAuth ? 
+                { Authorization: "Bearer " + context.getters.getToken }
+                : null
+
 			return new Promise((resolve) => {
 				fetch(url + endpoint, {
 					method: "POST",
 					headers: {
 						Accept: "application/json",
 						"Content-Type": "application/json",
+                        ...authorize
 					},
 					body: JSON.stringify(data),
 				}).then((res) => {
@@ -71,6 +84,7 @@ export default new Vuex.Store({
 	getters: {
 		isLoggedIn: (state) => !!state.token ,
         isActiveUser: (state) => !!state.isActive,
+        getToken: (state) => state.token
 	},
 
 	modules: {},
