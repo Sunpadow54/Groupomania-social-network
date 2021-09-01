@@ -32,14 +32,16 @@ router.beforeEach((to, from, next) => {
     // user is not loggIn
 	if (
 		to.meta.requireAuth &&
-		!store.getters.isLoggedIn
+		( !store.getters.isLoggedIn ||
+        !store.getters.isActiveUser )
 	) {
 		next("/");
 	} 
     // user is Logged
     else if (
 		!to.meta.requireAuth &&
-		store.getters.isLoggedIn
+		( store.getters.isLoggedIn &&
+        store.getters.isActiveUser )
 	) {
 		next("/dashboard");
 	} 

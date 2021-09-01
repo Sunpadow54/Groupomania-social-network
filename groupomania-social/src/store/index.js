@@ -9,6 +9,8 @@ export default new Vuex.Store({
 		token: "",
 		userId: "",
 		username: "",
+        isAdmin: false,
+        isActive: false,
 	},
 
 	mutations: {
@@ -16,6 +18,8 @@ export default new Vuex.Store({
 			state.token = data.token;
 			state.username = data.username;
 			state.userId = data.userId;
+            state.isAdmin = data.isAdmin;
+            state.isActive = data.isActive
 		},
 	},
 
@@ -67,7 +71,8 @@ export default new Vuex.Store({
 	},
 
 	getters: {
-		isLoggedIn: (state) => !!state.token,
+		isLoggedIn: (state) => !!state.token ,
+        isActiveUser: (state) => !!state.isActive,
 	},
 
 	modules: {},
