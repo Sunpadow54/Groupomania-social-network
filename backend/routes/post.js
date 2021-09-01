@@ -8,6 +8,7 @@ const router = express.Router();
 
 // ---- Import middelwares
 const { authUser, authRole } = require('../middleware/auth'); // to protect road (token)
+const multer = require('../middleware/multer-config'); // to upload img
 
 // ----- Import Controlls
 const postCtrl = require('../controllers/post');
@@ -17,7 +18,7 @@ const postCtrl = require('../controllers/post');
 // ------------------------- ROADS ----------------------------
 
 
-router.post('/',/* authUser, roleUser, */ /* auth,  */postCtrl.createPost);
+router.post('/',/* authUser, roleUser, */ /* auth,  */multer, postCtrl.createPost);
 router.put('/:id', /* auth,  */postCtrl.editPost);
 router.delete('/:id', /* auth,  */postCtrl.deletePost);
 router.get('/', /* auth,  */postCtrl.getAllPosts);

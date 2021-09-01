@@ -22,8 +22,14 @@
                 required
             ></v-textarea>
 
+            <!-- <label for="avatar">Upload</label>
+            <input @change="handleImage" type="file" name="upload"> -->
             <v-file-input
+                v-model="image"
+                
                 label="Importer une image"
+                type="file"
+                accept="image/*"
                 filled
                 prepend-icon="mdi-camera"
             ></v-file-input>
@@ -33,7 +39,7 @@
                 color="secondary"
                 type="submit"
                 class="ma-2 px-5"
-                @click.prevent=""
+                @click.prevent="createPost()"
             >
                 Envoyer
             </v-btn>
@@ -49,11 +55,10 @@ import { ref } from "@vue/composition-api";
 
 export default {
 	name: "CreatePost",
-
-	setup(/* context, { root } */) {
+	setup(context, { root }) {
         /* variables */
-		//const store = root.$store; // access to store in setup()
-		//const router = root.$router;
+		const store = root.$store; // access to store in setup()
+
         let valid = ref(null);
         const rule =  [v => !!v || "Ce champs est requis"];
 
@@ -61,12 +66,32 @@ export default {
 			title: "",
 			content: "",
 		};
+        
+        let image = ref(null);
+
+        /* functions */
+        const createPost = () => {
+
+            const newData = new FormData();
+                newData.append('post', JSON.stringify(post));
+                newData.append('image', image);
+
+            store.dispatch("postData", {
+					endpoint: "/posts",
+					data: newData,
+				})
+                .then((res) => console.log(res))
+                .catch((err) => console.log({err}));
+        }
 
     
 		return {
 			post,
 			valid,
-            rule
+            rule,
+            createPost,
+            image,
+            
 		};
 	},
 };

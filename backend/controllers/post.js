@@ -12,10 +12,17 @@ const Vote = require('../models/Vote');
 
 
 exports.createPost = (req, res, next) => {
+
+/*     const postObject = JSON.parse(req.body.post) */
+
+/*     const imageUrl = req.file ?  
+        { imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` } 
+        : {imgUrl:null }; */
+
     const newPost = new Post({
         ...req.body.post,
-        // imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        userId: req.body.userId
+        imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        userId: 3,
     });
     // insert post in Db
     Post.create(newPost)

@@ -32,19 +32,26 @@ export default new Vuex.Store({
 					})
 			})
 		},
+
 		postData(context, { endpoint, data }) {
-			return new Promise((resolve) => {
+           
+            
+			return new Promise((resolve, reject) => {
 				fetch(url + endpoint, {
 					method: 'POST',
 					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
+                    
+                        'Content-Type': 'multipart/form-data'
+
 					},
-					body: JSON.stringify(data)
+					body: data
 				})
 					.then(res => {
 							resolve(res.json())
 					})
+                    .catch(err => {
+                        reject(err.json())
+                    })
 			})
 		}
 	},
