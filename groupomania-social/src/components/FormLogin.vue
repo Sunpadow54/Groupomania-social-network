@@ -68,7 +68,6 @@ export default {
                 })
 				.then((res) => {
 					if (res.error && res.error === "Incorrect Password") {
-						console.log("pas bon mp");
 						errors.value = "Ce mot de passe est incorrect";
 					}
 					if (

@@ -1,7 +1,6 @@
 <template>
 	<section class="container">
 		<h2 class="body-1 mb-6">dernières publications</h2>
-
 		<!-- All Posts -->
 		<v-card
 			v-for="post in posts"
@@ -11,53 +10,66 @@
 			class="mb-5"
 		>
 			<div class="d-flex">
-				<!-- <v-tab-item> -->
-				<v-card grow elevation="1" tile class="order-2 overflow-hidden" width="100%">
-                    <!-- card top -->
+				<v-card
+					grow
+					elevation="1"
+					tile
+					class="order-2 overflow-hidden"
+					width="100%"
+				>
+					<!-- card top -->
 					<v-card-text class="d-flex align-center pa-2">
 						<h3 class="body-1 me-3 text-capitalize">
 							{{ post.author }}
 						</h3>
 						<span class="ma-0 text-caption text--disabled">
-                            il y a {{ post.date }}
-                        </span>
-						<v-icon v-if="post.nbrComment >= 5" color="secondary" class="ml-auto">mdi-fire</v-icon>
+							il y a {{ post.date }}
+						</span>
+						<v-icon
+							v-if="post.nbrComment >= 5"
+							color="secondary"
+							class="ml-auto"
+							>mdi-fire</v-icon
+						>
 					</v-card-text>
-                    <!-- card title -->
-					<a class="text-decoration-none text-dark" href="#">
-                        <v-card-title class="pa-2">
-                            {{ post.title }}
-                        </v-card-title>
-					</a>
-                    <!-- card image -->
-					<v-img
-						:src="post.img"
-						height="330px"
-					></v-img>
-                    <!-- card bottom -->
-					<a href="" class="text--disabled text-decoration-none">
-						<v-card-subtitle class="pa-2">
-							<v-icon>mdi-message-outline</v-icon>
-							<span class="mr-2">
-                                {{
-                                    post.nbrComment ?
-                                        post.nbrComment === 1 ? 
-                                            `1 commentaire` : `${post.nbrComment} commentaires`
-                                        : "0 commentaire"
-                                }}
-							</span>
-							<v-icon v-if="post.latestCom" class="body-1">mdi-subdirectory-arrow-right</v-icon>
-							<span class="text-caption">{{ post.latestCom }}</span>
-						</v-card-subtitle>
-					</a>
+					<!-- card title -->
+					<v-card-title
+						@click.prevent="goToPost(post.id_post, 'onePost')"
+						class="pa-2"
+					>
+						{{ post.title }}
+					</v-card-title>
+					<!-- card image -->
+					<v-img :src="post.img" height="330px"></v-img>
+					<!-- card bottom -->
+					<v-card-subtitle
+						@click="goToPost(post.id_post, 'onePost')"
+						class="pa-2"
+					>
+						<v-icon>mdi-message-outline</v-icon>
+						<span class="mr-2">
+							{{
+								post.nbrComment
+									? post.nbrComment === 1
+										? `1 commentaire`
+										: `${post.nbrComment} commentaires`
+									: "0 commentaire"
+							}}
+						</span>
+						<v-icon v-if="post.latestCom" class="body-1"
+							>mdi-subdirectory-arrow-right</v-icon
+						>
+						<span class="text-caption">{{ post.latestCom }}</span>
+					</v-card-subtitle>
 				</v-card>
-
 				<!-- card likes / dislikes -->
 				<div class="d-flex flex-column ma-2">
 					<v-btn x-small icon>
 						<v-icon>mdi-thumb-up-outline</v-icon>
 					</v-btn>
-					<span class="text-caption text-center">{{ post.likes ? post.likes : "0" }}</span>
+					<span class="text-caption text-center">
+                        {{ post.likes ? post.likes : "0" }}
+                    </span>
 					<v-btn x-small icon>
 						<v-icon>mdi-thumb-down-outline</v-icon>
 					</v-btn>
@@ -67,13 +79,14 @@
 	</section>
 </template>
 
+
 <script>
 import { ref, onMounted } from "@vue/composition-api";
 
 export default {
 	name: "AllPosts",
 
-	setup(context, { root }) {
+	setup(context, { root, emit }) {
 		const store = root.$store; // access to store in setup()
 		const posts = ref(null);
 
@@ -147,6 +160,12 @@ export default {
 			}
 		};
 
+		// functions from parent
+		const goToPost = (postId, mode) => {
+			emit("getPostId", postId);
+			emit("switchMode", mode);
+		};
+
 		// Render
 		onMounted(() => {
 			getAllPosts();
@@ -154,9 +173,9 @@ export default {
 
 		return {
 			posts,
+			goToPost,
 		};
 	},
 };
 </script>
 
-<style scoped></style>

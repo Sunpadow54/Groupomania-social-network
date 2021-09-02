@@ -2,7 +2,7 @@
 	<v-app-bar dark color="grey">
 		<v-toolbar-title class="align-self-center">
             <v-btn
-                @click="showCreatePost(false)"
+                @click="switchMode('dashboard')"
             >
                 <img
                     src="../assets/groupomania-logo_colors.svg"
@@ -15,10 +15,10 @@
 
 		<v-spacer></v-spacer>
 
-		<v-toolbar-title class="mr-2 align-self-center"> {{ userName }} </v-toolbar-title>
+		<v-toolbar-title class="mr-2 align-self-center text-capitalize"> {{ userName }} </v-toolbar-title>
 
 		<v-btn
-			@click="showCreatePost(true)"
+			@click="switchMode('createPost')"
 			class="mx-2 align-self-center"
 			small
 			icon
@@ -43,13 +43,13 @@ export default {
 		const userName = store.state.username;
 
 		/* functions */
-		const showCreatePost = (isShowned) => {
-			emit("switchToCreate", isShowned);
+		const switchMode = (isShowned) => {
+			emit("switchMode", isShowned);
 		};
 
 		/* return data */
 		return {
-			showCreatePost,
+			switchMode,
 			userName,
 		};
 	},

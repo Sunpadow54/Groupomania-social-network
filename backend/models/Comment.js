@@ -38,7 +38,7 @@ Comment.edit = (comment) => {
     // define the query
     const inserts = [comment.content, comment.commentId];
     const query = sql.format(`UPDATE comments SET content_comment=? WHERE id_comment=?`, inserts);
-    console.log(query);
+
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
