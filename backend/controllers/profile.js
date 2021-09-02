@@ -2,7 +2,7 @@
 // ------------------------- IMPORTS -------------------------
 
 const bcrypt = require('bcrypt'); // package password cryptage
-const { encryptEmail } = require('../middleware/crypto.js'); // import crypto tool
+const { encryptEmail, decryptEmail } = require('../middleware/crypto.js'); // import crypto tool
 
 // ---- import User Model
 const User = require('../models/User');
@@ -16,7 +16,8 @@ exports.getProfile = (req, res, next) => {
         .then(user => {
             userData = {
                 lastname: user.lastname,
-                firstname: user.firstname
+                firstname: user.firstname,
+                email: decryptEmail(user.email)
             }
             res.status(201).json(userData);
         })
@@ -28,16 +29,18 @@ exports.editProfile = (req, res, next) => {
     // Make sure that the user wants to modify his account with password
     User.findOne({ id_user: req.params.userId })
         .then(user => {
+
             // confirm password with compare
             bcrypt.compare(req.body.password, user.pass)
                 .then(valid => {
 
                     // password error
                     if (!valid) throw 'Incorrect Password';
-                    
+
                     // password good
                     const userEdited = {
-                        ...req.body,
+                        lastname: req.body.lastname,
+                        firstname: req.body.firstname,
                         email: encryptEmail(req.body.email),
                         userId: req.params.userId
                     };

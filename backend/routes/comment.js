@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // ---- Import middelwares
-const auth = require('../middleware/auth'); // to protect road (token)
+const { authUser, authRole } = require('../middleware/auth'); // to protect road (token)
 
 // ----- Import Controlls
 const commentCtrl = require('../controllers/comment');
@@ -17,9 +17,9 @@ const commentCtrl = require('../controllers/comment');
 // ------------------------- ROADS ----------------------------
 
 
-router.post('/', /* auth,  */commentCtrl.createComment);
-router.put('/:id', /* auth,  */commentCtrl.editComment);
-router.delete('/:id', /* auth,  */commentCtrl.deleteComment);
+router.post('/', authUser, commentCtrl.createComment);
+router.put('/:id', authUser, commentCtrl.editComment);
+router.delete('/:id', authUser, commentCtrl.deleteComment);
 
 router.put('/:id/moderate', /* authUser, */ /* authRole('admin'),  *//* auth,  */commentCtrl.moderateComment);
 

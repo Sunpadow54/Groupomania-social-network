@@ -89,7 +89,7 @@ export default {
 				.dispatch("postData", {
 					endpoint: "/auth/signup",
 					data: newUser,
-                    hasAuth: false
+					hasAuth: false,
 				})
 				.then((res) => {
 					if (res.error && res.error === "This email already exist") {
@@ -116,16 +116,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped>
-/* input[type="submit"] {
-	background-color: var(--brand-color-primary);
-}
-input[type="submit"]:active,
-button[type="submit"]:hover {
-	background-color: var(--brand-color-secondary);
-}
-input:invalid {
-	border: 1px solid var(--brand-color-secondary);
-} */
-</style>

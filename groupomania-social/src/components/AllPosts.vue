@@ -29,13 +29,13 @@
 							v-if="post.nbrComment >= 5"
 							color="secondary"
 							class="ml-auto"
-							>mdi-fire</v-icon
-						>
+							>mdi-fire
+                        </v-icon>
 					</v-card-text>
 					<!-- card title -->
 					<v-card-title
 						@click.prevent="goToPost(post.id_post, 'onePost')"
-						class="pa-2"
+						class="pa-2 cursor-point"
 					>
 						{{ post.title }}
 					</v-card-title>
@@ -44,7 +44,7 @@
 					<!-- card bottom -->
 					<v-card-subtitle
 						@click="goToPost(post.id_post, 'onePost')"
-						class="pa-2"
+						class="pa-2 cursor-point"
 					>
 						<v-icon>mdi-message-outline</v-icon>
 						<span class="mr-2">
@@ -56,9 +56,9 @@
 									: "0 commentaire"
 							}}
 						</span>
-						<v-icon v-if="post.latestCom" class="body-1"
-							>mdi-subdirectory-arrow-right</v-icon
-						>
+						<v-icon v-if="post.latestCom" class="body-1">
+                            mdi-subdirectory-arrow-right
+                        </v-icon>
 						<span class="text-caption">{{ post.latestCom }}</span>
 					</v-card-subtitle>
 				</v-card>
@@ -68,8 +68,8 @@
 						<v-icon>mdi-thumb-up-outline</v-icon>
 					</v-btn>
 					<span class="text-caption text-center">
-                        {{ post.likes ? post.likes : "0" }}
-                    </span>
+						{{ post.likes ? post.likes : "0" }}
+					</span>
 					<v-btn x-small icon>
 						<v-icon>mdi-thumb-down-outline</v-icon>
 					</v-btn>
@@ -78,7 +78,6 @@
 		</v-card>
 	</section>
 </template>
-
 
 <script>
 import { ref, onMounted } from "@vue/composition-api";
@@ -178,4 +177,3 @@ export default {
 	},
 };
 </script>
-

@@ -42,7 +42,6 @@ export default {
 			},
 		};
 
-		console.log(props.postId);
 		const createComment = () => {
 			store
 				.dispatch("postData", {

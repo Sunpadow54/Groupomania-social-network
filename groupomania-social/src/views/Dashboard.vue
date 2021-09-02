@@ -14,20 +14,22 @@
 				v-if="mode === 'createPost'"
 				v-on:switchMode="switchMode"
 			/>
+
+			<Profile v-if="mode === 'profile'" v-on:switchMode="switchMode" />
 		</main>
 	</div>
 </template>
-
 
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
 import AllPosts from "@/components/AllPosts.vue";
 import CreatePost from "@/components/CreatePost.vue";
 import Post from "@/components/Post.vue";
+import Profile from "@/components/Profile.vue";
 
 export default {
 	name: "Dashboard",
-	components: { HeaderNav, AllPosts, CreatePost, Post },
+	components: { HeaderNav, AllPosts, CreatePost, Post, Profile },
 	data() {
 		return {
 			modeCreatePost: false,
@@ -45,7 +47,6 @@ export default {
 	},
 };
 </script>
-
 
 <style scoped>
 main {

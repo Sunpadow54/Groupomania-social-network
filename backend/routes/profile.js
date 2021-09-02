@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // ---- Import middelwares
-const auth = require('../middleware/auth'); // to protect road (token)
+const { authUser, authRole } = require('../middleware/auth'); // to protect road (token)
 const { userSignUpRules, validateSignUp } = require('../middleware/validate');
 
 // ----- Import Controlls
@@ -17,9 +17,9 @@ const profileCtrl = require('../controllers/profile');
 // ============================================================
 // ------------------------- ROADS ----------------------------
 
-router.get('/:userId', /* auth, */ profileCtrl.getProfile);
-router.put('/:userId', /* auth, */userSignUpRules(), validateSignUp, profileCtrl.editProfile);
-router.delete('/:userId', /* auth,  */profileCtrl.deleteProfile);
+router.get('/:userId', authUser, profileCtrl.getProfile);
+router.put('/:userId', authUser, userSignUpRules(), validateSignUp, profileCtrl.editProfile);
+router.delete('/:userId', authUser, profileCtrl.deleteProfile);
 
 
 // ============================================================
