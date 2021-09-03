@@ -29,7 +29,6 @@ exports.editProfile = (req, res, next) => {
     // Make sure that the user wants to modify his account with password
     User.findOne({ id_user: req.params.userId })
         .then(user => {
-
             // confirm password with compare
             bcrypt.compare(req.body.password, user.pass)
                 .then(valid => {

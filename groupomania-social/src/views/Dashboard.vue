@@ -1,8 +1,14 @@
 <template>
 	<div>
-		<HeaderNav v-on:switchMode="switchMode" />
+		<HeaderNav 
+            v-on:switchMode="switchMode"
+        />
 		<main class="container">
-			<Post :postId="postId" v-if="mode === 'onePost'" />
+			<Post 
+                v-if="mode === 'onePost'"
+                v-on:switchMode="switchMode"
+                :postId="postId"
+            />
 
 			<AllPosts
 				v-if="mode === 'dashboard'"
@@ -11,11 +17,16 @@
 			/>
 
 			<CreatePost
-				v-if="mode === 'createPost'"
+				v-if="mode === 'createPost' || mode === 'editPost'"
 				v-on:switchMode="switchMode"
+                :mode="mode"
+                :postId="postId"
 			/>
 
-			<Profile v-if="mode === 'profile'" v-on:switchMode="switchMode" />
+			<Profile 
+                v-if="mode === 'profile'" 
+                v-on:switchMode="switchMode" 
+            />
 		</main>
 	</div>
 </template>

@@ -1,6 +1,8 @@
 <template>
 	<v-card>
-		<v-card-title> Créer un nouveau Post </v-card-title>
+		<v-card-title v-if="mode === 'createPost'"> Créer un nouveau Post </v-card-title>
+        <v-card-title v-if="mode === 'editPost'"> Modifier son Post </v-card-title>
+
 
 		<v-form v-model="valid" class="text-center pa-5">
 			<v-text-field
@@ -32,11 +34,21 @@
 			></v-file-input>
 
 			<v-btn
+                v-if="mode === 'createPost'"
 				:disabled="!valid"
 				color="secondary"
 				type="submit"
 				class="ma-2 px-5"
 				@click.prevent="createPost()"
+			>
+            </v-btn>
+            <v-btn
+                v-if="mode === 'editPost'"
+				:disabled="!valid"
+				color="secondary"
+				type="submit"
+				class="ma-2 px-5"
+				@click.prevent="editPost()"
 			>
 				Envoyer
 			</v-btn>
@@ -50,9 +62,14 @@ import { ref } from "@vue/composition-api";
 
 export default {
 	name: "CreatePost",
+    props: ["mode", "postId"],
 	setup(context, { emit, root }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
+        const mode = context.mode;
+        const postId = context.postId;
+
+        console.log(postId);
 
 		let valid = ref(null);
 		const rule = [(v) => !!v || "Ce champs est requis"];
@@ -65,6 +82,8 @@ export default {
 		let image = ref(null);
 
 		/* functions */
+
+        // Create Post
 		const createPost = () => {
 			// store actions
 			store
@@ -78,6 +97,20 @@ export default {
 				.catch((err) => console.log({ err }));
 		};
 
+        // Edit Post
+        const editPost = () => {
+            store
+                .dispatch("editData", {
+					endpoint: `/posts/${postId}`,
+					data: post,
+					file: image.value,
+				})
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => console.log(err));
+        };
+
 		const switchMode = (mode) => {
 			emit("switchMode", mode);
 		};
@@ -89,6 +122,9 @@ export default {
 			rule,
 			createPost,
 			image,
+            editPost,
+            mode,
+            postId
 		};
 	},
 };

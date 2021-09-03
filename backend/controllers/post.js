@@ -18,7 +18,7 @@ exports.createPost = (req, res, next) => {
             imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
             userId: res.locals.userId,
         }
-        : {...req.body, userId: res.locals.userId };// no
+        : {...req.body, userId: res.locals.userId }; // no
 
     const newPost = new Post({
         ...postObject,
@@ -34,17 +34,24 @@ exports.editPost = (req, res, next) => {
     // Find the post to check if the user is the author of the Post
     Post.findOne(req.params.id)
         .then(dbPost => {
-            const isAuthor = dbPost.id_user === req.body.userId ? true : false;
+            const isAuthor = dbPost.id_user === res.locals.userId ? true : false;
 
             // the user is not the author
             if (!isAuthor) { throw 'You are not the author of the Post' };
 
             // the user is the author
-            const editedPost = {
-                userId: req.body.userId,
-                ...req.body.post,
-                postId: req.params.id
-            };
+            const editedPost =  req.file ? // check if user has made a new upload of an image
+            { //yes
+                ...JSON.parse(req.body.post),
+                    imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                    postId: req.params.id,
+                    userId: res.locals.userId
+            }
+            : { ... req.body, 
+                postId: req.params.id,
+                userId: res.locals.userId
+            }; //no
+
             // modify in db
             Post.edit(editedPost)
                 .then(message => res.status(201).json({ message }))

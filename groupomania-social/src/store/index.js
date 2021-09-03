@@ -78,6 +78,7 @@ export default new Vuex.Store({
                 });
             });
         },
+        
         editData(context, { endpoint, data, file }) {
             let formattedData, headers;
             if (typeof file !== "undefined") {
@@ -89,7 +90,6 @@ export default new Vuex.Store({
             if (!file) {
                 formattedData = JSON.stringify(data);
                 headers = {
-
                     "Content-Type": "application/json",
                     Authorization: "Bearer " + context.getters.getToken,
                 };

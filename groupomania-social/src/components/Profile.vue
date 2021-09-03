@@ -16,7 +16,6 @@
 					class="py-2"
 					:rules="formRules.name"
 					label="Prénom"
-					aria-placeholder="newUser.firstname"
 					required
 				></v-text-field>
 

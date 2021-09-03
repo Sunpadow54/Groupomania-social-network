@@ -1,5 +1,6 @@
 <template>
 	<section class="container">
+        <h2>Post & comments</h2>
 		<!-- Post -->
 		<v-card elevation="2" outlined>
 			<div class="d-flex">
@@ -25,6 +26,20 @@
 							class="ml-auto"
 							>mdi-fire</v-icon
 						>
+                        <!-- Post Edit ? -->
+                        <v-card-actions 
+                            v-if="post.id_user === $store.state.userId"
+                            class="ml-auto"
+                        >
+                            <v-btn
+                                @click="switchMode('editPost')"
+                                color="primary"
+                                x-small
+                                outlined
+                            >
+                                Edit
+                            </v-btn>
+                        </v-card-actions>
 					</v-card-text>
 					<!-- Post title -->
 					<v-card-title class="pa-2">
@@ -36,6 +51,7 @@
 					<!-- Post image -->
 					<v-img :src="post.img" height="330px"></v-img>
 				</v-sheet>
+
 				<!-- Post likes / dislikes -->
 				<v-sheet class="d-flex flex-column pa-2 elevation-1">
 					<v-btn x-small icon>
@@ -111,14 +127,14 @@ export default {
 	components: { CreateComment },
 	props: ["postId"],
 
-	setup(context, { root }) {
+	setup(context, { root, emit }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
 		const post = ref(null);
 		const show = false;
 
-		console.log(context.postId);
-
+        /* function */
+        // Create Post
 		const getPost = () => {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
@@ -126,6 +142,11 @@ export default {
 					post.value = postFetched;
 				})
 				.catch((err) => console.log(err));
+		};
+
+        // Edit Post
+		const switchMode = (mode) => {
+			emit("switchMode", mode);
 		};
 
 		// Render
@@ -136,6 +157,7 @@ export default {
 		return {
 			post,
 			show,
+            switchMode
 		};
 	},
 };
