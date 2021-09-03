@@ -64,7 +64,7 @@
 import { ref, onMounted } from "@vue/composition-api";
 export default {
 	name: "Profile",
-	setup(context, { root }) {
+	setup(context, { root, emit }) {
 		/* Variables */
 		const store = root.$store; // access to store in setup()
 		const userId = store.state.userId;
@@ -79,10 +79,7 @@ export default {
 				(v) => /.+@.+/.test(v) || "Adresse mail non valide",
 			],
 			password: [
-				(v) => !!v || "Ce champs est requis",
-				(v) =>
-					/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/.test(v) ||
-					"Le mot de passe doit contenir au moins une majuscule, et un chiffre",
+				(v) => !!v || "Veuillez confirmer",
 			],
 		};
 
@@ -113,17 +110,20 @@ export default {
 					file: false,
 				})
 				.then((res) => {
+                    // errors
 					if (res.error && res.error === "This email already exist") {
 						errors.value = "Cet email est déjà utilisé";
 					}
-					if (res.message) {
-						// return to login
-						console.log(res);
-					}
+                    if (res.error && res.error === "Incorrect Password") {
+                        errors.value = "Ce mot de passe est incorrect";
+                    }
+
+					// success
+                    store.commit('changeUsername', newUser.value.firstname + ' ' + newUser.value.lastname); // change to new name in state
+                    emit("switchMode", 'dashboard'); // redirect
+
 				})
-				.catch((err) => {
-					console.log(err);
-				});
+				.catch((err) => { console.log(err) });
 		};
 
 		// Render

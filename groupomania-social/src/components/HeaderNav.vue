@@ -13,7 +13,7 @@
 
 		<v-spacer></v-spacer>
 
-		<v-toolbar-title class="mr-2 align-self-center text-capitalize">
+		<v-toolbar-title v-model="userName" class="mr-2 align-self-center text-capitalize">
 			{{ userName }}
 		</v-toolbar-title>
 
@@ -40,17 +40,23 @@
 </template>
 
 <script>
+import { ref, watch, } from "@vue/composition-api";
 export default {
 	name: "HeaderNav",
 
-	setup(context, { emit, root }) {
+	setup(props, { emit, root }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
-		const userName = store.state.username;
+		let userName = ref(store.state.username);
 
+        // watch change made from updating account username
+        watch(() => store.state.username, () => {
+            userName.value = store.getters.getUsername;
+        })
+        
 		/* functions */
-		const switchMode = (isShowned) => {
-			emit("switchMode", isShowned);
+		const switchMode = (mode) => {
+			emit("switchMode", mode);
 		};
 
 		/* return data */
@@ -59,5 +65,6 @@ export default {
 			userName,
 		};
 	},
+
 };
 </script>

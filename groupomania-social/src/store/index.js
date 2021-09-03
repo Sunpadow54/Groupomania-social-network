@@ -14,6 +14,9 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        changeUsername(state, newName) {
+            state.username = newName
+        },
         auth_success(state, data) {
             state.token = data.token;
             state.username = data.username;
@@ -110,6 +113,7 @@ export default new Vuex.Store({
         isLoggedIn: (state) => !!state.token,
         isActiveUser: (state) => !!state.isActive,
         getToken: (state) => state.token,
+        getUsername: state => state.username
     },
 
     modules: {},
