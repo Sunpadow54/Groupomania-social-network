@@ -24,21 +24,29 @@
 							v-if="post.nbrComment >= 5"
 							color="secondary"
 							class="ml-auto"
-							>mdi-fire</v-icon
 						>
-                        <!-- Post Edit ? -->
+                            mdi-fire
+                        </v-icon>
+                        <!-- Post actions -->
                         <v-card-actions 
                             v-if="post.id_user === $store.state.userId"
                             class="ml-auto"
                         >
+                            <!-- Edit ? -->
                             <v-btn
                                 @click="switchMode('editPost')"
                                 color="primary"
+                                class="mr-2"
                                 x-small
                                 outlined
                             >
                                 Edit
                             </v-btn>
+                            <!-- Delete ? -->
+                            <Delete 
+                                :postId="postId" 
+                                v-on:switchMode="switchMode" 
+                            />
                         </v-card-actions>
 					</v-card-text>
 					<!-- Post title -->
@@ -121,10 +129,11 @@
 <script>
 import { ref, onMounted } from "@vue/composition-api";
 import CreateComment from "@/components/CreateComment.vue";
+import Delete from "@/components/Delete.vue";
 
 export default {
 	name: "Post",
-	components: { CreateComment },
+	components: { CreateComment, Delete },
 	props: ["postId"],
 
 	setup(context, { root, emit }) {
@@ -138,10 +147,10 @@ export default {
 		const getPost = () => {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
-				.then((postFetched) => {
-					post.value = postFetched;
-				})
-				.catch((err) => console.log(err));
+                    .then((postFetched) => {
+                        post.value = postFetched;
+                    })
+                    .catch((err) => console.log(err));
 		};
 
         // Edit Post
@@ -157,7 +166,7 @@ export default {
 		return {
 			post,
 			show,
-            switchMode
+            switchMode,
 		};
 	},
 };

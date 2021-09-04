@@ -107,6 +107,24 @@ export default new Vuex.Store({
                 });
             });
         },
+
+        deleteData(context, endpoint) {
+            return new Promise((resolve, reject) => {
+                fetch(url + endpoint, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + context.getters.getToken,
+                    },
+                }).then((res) => {
+                    if (!res.ok) {
+                        reject(
+                            `Désolé, il est impossible d'accéder à l'API. ( erreur status: ${res.status})`
+                        );
+                    }
+                    resolve(res.json());
+                });
+            });
+        },
     },
 
     getters: {

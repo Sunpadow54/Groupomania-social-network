@@ -65,13 +65,13 @@ exports.deletePost = (req, res, next) => {
     // Find the post to check if the user is the author of the Post
     Post.findOne(req.params.id)
         .then(dbPost => {
-            const isAuthor = dbPost.id_user === req.body.userId ? true : false;
+            const isAuthor = dbPost.id_user === res.locals.userId ? true : false;
 
             // the user is not the author
             if (!isAuthor) { throw 'You are not the author of the Post' };
 
             // the user is the author
-            const ids = { postId: req.params.id, userId: req.body.userId }
+            const ids = { postId: req.params.id, userId: res.locals.userId }
             Post.delete(ids)
                 .then(message => res.status(201).json({ message }))
                 .catch(error => res.status(500).json({ error }));
