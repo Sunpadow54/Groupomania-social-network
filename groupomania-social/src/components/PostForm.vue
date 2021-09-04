@@ -36,6 +36,10 @@
 				prepend-icon="mdi-camera"
 			></v-file-input>
 
+            <v-alert v-if="errors" dense text type="error">
+                {{ errors }}
+            </v-alert>
+
 			<v-btn
 				v-if="mode === 'createPost'"
 				:disabled="!valid"
@@ -79,6 +83,7 @@ export default {
 		const store = root.$store; // access to store in setup()
 		let valid = ref(null);
 		const rule = [(v) => !!v || "Ce champs est requis"];
+        let errors = ref(null);
 
         let post = ref(null);
 
@@ -87,21 +92,7 @@ export default {
         let labelImgInput = ref(null);
 
 		/* functions */
-
-		// Create Post
-		const createPost = () => {
-			// store actions
-			store
-				.dispatch("postData", {
-					endpoint: "/posts",
-					data: post.value,
-					hasAuth: true,
-					file: image.value,
-				})
-				.then(() => switchMode("dashboard"))
-				.catch((err) => console.log({ err }));
-		};
-
+        
         // show the correct input if form is to create or edit
 		const showInputValue = () => {
             if (props.mode === 'editPost') {
@@ -130,9 +121,24 @@ export default {
             }
 		};
 
+		// Create Post
+		const createPost = () => {
+			// store actions
+			store
+				.dispatch("postData", {
+					endpoint: "/posts",
+					data: post.value,
+					hasAuth: true,
+					file: image.value,
+				})
+				.then(() => switchMode("dashboard"))
+				.catch(() => {
+                    errors.value = 'une erreur est survenue. Vérifier que l\'image ne pèse que 3MB/Mo'
+                });
+		};
+
         // Edit Post
 		const editPost = () => {
-            console.log(image.value);
 			store
 				.dispatch("editData", {
 					endpoint: `/posts/${props.postId}`,
@@ -140,10 +146,13 @@ export default {
                     // if user wants to change image or not
 					file: image.value ? image.value : false,
 				})
-				.then((res) => {
-					console.log(res);
+				.then(() => {
+                    // redirect
+					switchMode('onePost');
 				})
-				.catch((err) => console.log(err));
+				.catch(() => {
+                    errors.value = 'une erreur est survenue. Vérifier que l\'image ne pèse que 3MB/Mo'
+                });
 		};
 
 		const switchMode = (mode) => {
@@ -170,7 +179,8 @@ export default {
 			showInputValue,
 			editPost,
 			oldImage,
-            labelImgInput
+            labelImgInput,
+            errors
 		};
 	},
 };

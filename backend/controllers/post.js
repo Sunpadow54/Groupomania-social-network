@@ -47,7 +47,8 @@ exports.editPost = (req, res, next) => {
                     postId: req.params.id,
                     userId: res.locals.userId
             }
-            : { ... req.body, 
+            : { ... req.body,
+                imgUrl: dbPost.img,
                 postId: req.params.id,
                 userId: res.locals.userId
             }; //no
