@@ -4,19 +4,19 @@
             v-on:switchMode="switchMode"
         />
 		<main class="container">
+            <AllPosts
+				v-if="mode === 'dashboard'"
+				v-on:switchMode="switchMode"
+				v-on:getPostId="getPostId"
+			/>
+            
 			<Post 
                 v-if="mode === 'onePost'"
                 v-on:switchMode="switchMode"
                 :postId="postId"
             />
 
-			<AllPosts
-				v-if="mode === 'dashboard'"
-				v-on:switchMode="switchMode"
-				v-on:getPostId="getPostId"
-			/>
-
-			<CreatePost
+			<PostForm
 				v-if="mode === 'createPost' || mode === 'editPost'"
 				v-on:switchMode="switchMode"
                 :mode="mode"
@@ -34,13 +34,13 @@
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
 import AllPosts from "@/components/AllPosts.vue";
-import CreatePost from "@/components/CreatePost.vue";
+import PostForm from "@/components/PostForm.vue";
 import Post from "@/components/Post.vue";
 import Profile from "@/components/Profile.vue";
 
 export default {
 	name: "Dashboard",
-	components: { HeaderNav, AllPosts, CreatePost, Post, Profile },
+	components: { HeaderNav, AllPosts, PostForm, Post, Profile },
 	data() {
 		return {
 			modeCreatePost: false,
