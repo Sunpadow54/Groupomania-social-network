@@ -79,6 +79,8 @@ export default {
 			],
 			password: [
 				(v) => !!v || "Veuillez confirmer",
+                (v) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/.test(v) ||
+					"Ce mot de passe n'est pas valide",
 			],
 		};
 
@@ -116,10 +118,11 @@ export default {
                     if (res.error && res.error === "Incorrect Password") {
                         errors.value = "Ce mot de passe est incorrect";
                     }
-
 					// success
-                    store.commit('changeUsername', newUser.value.firstname + ' ' + newUser.value.lastname); // change to new name in state
-                    emit("switchMode", 'dashboard'); // redirect
+                    if (res.message) {
+                        store.commit('changeUsername', newUser.value.firstname + ' ' + newUser.value.lastname); // change to new name in state
+                        emit("switchMode", 'dashboard'); // redirect
+                    }
 
 				})
 				.catch((err) => { console.log(err) });

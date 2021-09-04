@@ -78,8 +78,8 @@ export default {
 			password: [
 				(v) => !!v || "Ce champs est requis",
 				(v) =>
-					/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/.test(v) ||
-					"Le mot de passe doit contenir au moins une majuscule, et un chiffre",
+					/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/.test(v) ||
+					"Le mot de passe doit contenir au moins une majuscule, et un chiffre (minimum 5 caractères)",
 			],
 		};
 
