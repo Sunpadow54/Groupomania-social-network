@@ -28,7 +28,7 @@ import { ref } from "@vue/composition-api";
 export default {
 	name: "CreateComment",
 	props: ["postId"],
-	setup(props, { root }) {
+	setup(props, { root, emit }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
 		let valid = ref(null);
@@ -42,6 +42,7 @@ export default {
 			},
 		};
 
+        /* functions */
 		const createComment = () => {
 			store
 				.dispatch("postData", {
@@ -50,7 +51,9 @@ export default {
 					hasAuth: true,
 					file: null,
 				})
-				.then((a) => console.log(a))
+				.then(() => {
+                    emit('closeComment', false)
+                })
 				.catch((err) => console.log({ err }));
 		};
 

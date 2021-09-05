@@ -18,7 +18,7 @@
 							{{ post.author }}
 						</h2>
 						<span class="ma-0 text-caption text--disabled">
-							il y a {{ post.date }}
+							le {{ post.date }}
 						</span>
 						<v-icon
 							v-if="post.nbrComment >= 5"
@@ -97,7 +97,10 @@
 				<v-expand-transition>
 					<div v-show="show">
 						<v-divider></v-divider>
-						<CreateComment :postId="postId" />
+						<CreateComment 
+                            :postId="postId"
+                            v-on:closeComment="closeComment" 
+                        />
 					</div>
 				</v-expand-transition>
 			</v-card>
@@ -115,7 +118,7 @@
 						{{ comment.author }}
 					</h2>
 					<span class="ma-0 text-caption text--disabled">
-						il y a {{ comment.date }}
+						le {{ comment.date }}
 					</span>
 				</v-card-text>
 				<v-card-text>
@@ -127,7 +130,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "@vue/composition-api";
+import { ref, onMounted, watch } from "@vue/composition-api";
 import CreateComment from "@/components/CreateComment.vue";
 import Delete from "@/components/Delete.vue";
 
@@ -140,7 +143,7 @@ export default {
 		/* variables */
 		const store = root.$store; // access to store in setup()
 		const post = ref(null);
-		const show = false;
+		let show = ref(false);
 
         /* function */
         // Create Post
@@ -148,25 +151,45 @@ export default {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
                     .then((postFetched) => {
-                        post.value = postFetched;
+                        post.value = {
+                            ...postFetched,
+                            date: formatDate(postFetched.date),
+                        };
                     })
                     .catch((err) => console.log(err));
 		};
+
+        const formatDate = (datePost) => {
+            const date = datePost.split(' ');
+            return date[0] + ' à ' + date[1];
+        }
 
         // Edit Post
 		const switchMode = (mode) => {
 			emit("switchMode", mode);
 		};
 
+        // new comment ?
+        function closeComment (isOpen){
+            this.show = isOpen;
+        }
+
 		// Render
 		onMounted(() => {
 			getPost();
 		});
+
+        // watch change made from comments (rerender)
+        watch(() => show.value, () => {
+            getPost();
+        })
+        
 		/*  return data */
 		return {
 			post,
 			show,
             switchMode,
+            closeComment
 		};
 	},
 };

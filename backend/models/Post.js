@@ -123,7 +123,7 @@ Post.findOne = (id) => {
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.id_user, p.title, p.content, p.img, 
-                DATE_FORMAT(p.date_post, "%d/%m/%Y%T") as date,
+                DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author,
                 likes, dislikes
             FROM posts AS p
