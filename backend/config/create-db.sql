@@ -57,3 +57,10 @@ CREATE TABLE IF NOT EXISTS votes
         FOREIGN KEY (id_user)
         REFERENCES users(id_user) ON DELETE SET NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+
+INSERT INTO `users` 
+    (`id_user`, `email`, `pass`, `is_admin`, `is_active`, `lastname`, `firstname`)
+    VALUES 
+            (NULL, 'XuUGXCyDnb4NfSVk3OeDxXjM6s7qC3Coz4SYUyiCYic=', '$2b$10$9OkKjBuMTQpGr/f1YQFysusiE2r9QvfMrKSSUY7bBdsr5Wu/hLG12', '1', '1', 'admin', '1'), 
+            (NULL, 'ah/1zOginBbx+i2b3HTdkOf78aTINQ6pYuMvSHiMnHE=', '$2b$10$huBk.26upIA5skgc3SQZFumkl2ZlX.FFTKFfHRGU28mg8FvjChKYS', '1', '1', 'admin', '2') 
