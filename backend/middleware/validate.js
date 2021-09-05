@@ -23,7 +23,7 @@ const userSignUpRules = () => {
             .notEmpty().withMessage('this field is empty')
             .isLength({ min: 5 })
             .withMessage('password must be at least 5 chars long')
-            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/)
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w@\-%]+$/)
             .withMessage('password must contain at least one digit, and one uppercase letter'),
         check('lastname')
             .notEmpty().withMessage('lastname is empty'),

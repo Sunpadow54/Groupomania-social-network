@@ -79,7 +79,7 @@ export default {
 			],
 			password: [
 				(v) => !!v || "Veuillez confirmer",
-                (v) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{5,}$/.test(v) ||
+                (v) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[\w@\-%]{5,}$/.test(v) ||
 					"Ce mot de passe n'est pas valide",
 			],
 		};
