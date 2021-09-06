@@ -89,19 +89,21 @@ User.findAll = () => {
                 u.id_user AS userId, u.email AS email, 
                 CONCAT(u.lastname, ' ', u.firstname) AS name, 
                 u.is_active AS isActive, u.is_admin AS isAdmin,
-                nbrModeratedPost + nbrModeratedCom AS moderatedMsg
+                (COALESCE(nbrModeratedPost, 0) + COALESCE(nbrModeratedCom,0)) AS moderatedMsg
             FROM users u
             LEFT JOIN (
-                SELECT id_user,
-                SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) AS nbrModeratedPost
-                FROM posts
-                GROUP BY id_user
+                SELECT p.id_user,
+                COUNT(*) AS nbrModeratedPost
+                FROM posts p
+                WHERE p.is_active = 0
+                GROUP BY p.id_user
             ) posts ON u.id_user = posts.id_user
             LEFT JOIN (
-                SELECT id_user,
-                SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) AS nbrModeratedCom
-                FROM comments
-                GROUP BY id_user
+                SELECT c.id_user,
+                COUNT(*) AS nbrModeratedCom
+                FROM comments c
+                WHERE c.is_active = 0
+                GROUP BY c.id_user
             ) comments ON u.id_user = comments.id_user
         `);
     // ask SQL
