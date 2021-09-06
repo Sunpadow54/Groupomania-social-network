@@ -7,12 +7,18 @@
 					v-for="user in users"
 					:key="user.name"
                     color="primary"
-                    :class="isUserActive"
+
 				>
                     <template v-slot:activator >
                         <v-list-item-content>
                             <v-list-item-title v-text="user.name"></v-list-item-title>
                         </v-list-item-content>
+                        <v-chip
+                            v-if="!user.isActive"
+                            color="secondary"
+                        >
+                            utilisateur exclu
+                        </v-chip>
                         <v-chip
                             v-if="user.moderatedMsg"
                             outlined
@@ -20,15 +26,11 @@
                         >
                            {{user.moderatedMsg}} messages à modérer
                         </v-chip>
-                        <v-chip
-                            v-if="!user.isActive"
-                            outlined
-                            color="secondary"
-                        >
-                            utilisateur exclu
-                        </v-chip>
                     </template>
-                    <ModerateUser :userId="user.userId" />
+                    <ModerateUser 
+                        :userId="user.userId" 
+                        :isActiveMember="user.isActive" 
+                        v-on:hasBeenModerated="hasBeenModerated" />
 					
 				</v-list-group>
 			</v-list>
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "@vue/composition-api";
+import { onMounted, ref, watch } from "@vue/composition-api";
 import ModerateUser from "@/components/ModerateUser"
 export default {
 	name: "Admin",
@@ -45,7 +47,7 @@ export default {
 	setup(context, {root,}) {
         const store = root.$store; // access to store in setup()
         const users = ref(null);
-        let isUserActive = ref(null);
+        let moderationMade = ref(false) // used to watch the moderations made inside child
 
         // Function Fetch all users
         const getAllUsers = () => {
@@ -59,15 +61,25 @@ export default {
 				.catch((err) => console.log(err));
 		};
 
+        function hasBeenModerated() {
+			moderationMade.value = !moderationMade.value
+		}
+
         // Render
 		onMounted(() => {
 			getAllUsers();
 		});
+        
+        // watch if moderations inside child component has been made
+        watch(() => moderationMade.value, () => {
+            getAllUsers()
+        })
 
         /* return data */
         return {
             users,
-            isUserActive,
+            hasBeenModerated
+
         }
     },
 

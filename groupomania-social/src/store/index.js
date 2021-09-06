@@ -80,28 +80,43 @@ export default new Vuex.Store({
         },
         
         editData(context, { endpoint, data, file }) {
-            let formattedData, headers;
+            let fetchContent;
+            // let formattedData, headers;
+            if (!data) {
+                fetchContent = {
+                    headers: { Authorization: "Bearer " + context.getters.getToken },
+                }
+            }
+
             if (typeof file !== "undefined") {
-                formattedData = new FormData();
+                let formattedData = new FormData();
                 formattedData.append("post", JSON.stringify(data));
                 formattedData.append("image", file);
-                headers = { Authorization: "Bearer " + context.getters.getToken };
+                fetchContent = {
+                    headers: { Authorization: "Bearer " + context.getters.getToken },
+                    body: formattedData
+                }
+                
             }
-            if (!file) {
-                formattedData = JSON.stringify(data);
-                headers = {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + context.getters.getToken,
-                };
+            if (!file && data !== false) {
+                let formattedData = JSON.stringify(data);
+                fetchContent = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + context.getters.getToken,
+                    },
+                    body: formattedData
+                }
             }
 
             return new Promise((resolve) => {
                 fetch(url + endpoint, {
                     method: "PUT",
-                    headers: {
+                    ...fetchContent
+                    /* headers: {
                         ...headers,
                     },
-                    body: formattedData,
+                    body: formattedData, */
                 }).then((res) => {
                     resolve(res.json());
                 });

@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 
 // ---- Import middelwares
-const { authUser } = require('../middleware/auth'); // to protect road (token)
+const { authUser, authRole } = require('../middleware/auth'); // to protect road (token)
 
 // ----- Import Controlls
 const adminCtrl = require('../controllers/admin');
@@ -17,9 +17,9 @@ const adminCtrl = require('../controllers/admin');
 // ------------------------- ROADS ----------------------------
 
 
-router.get('/users', /* authUser, roleAdmin, */adminCtrl.getAllUsers);
-router.get('/users/:userId', /* authUser, roleAdmin, */adminCtrl.getAllHidden)
-router.put('/users/:userId/ban', /* authUser, roleAdmin, */adminCtrl.banUser);
+router.get('/users', authUser, authRole('admin'), adminCtrl.getAllUsers);
+router.get('/users/:userId', authUser, authRole('admin'), adminCtrl.getAllHidden)
+router.put('/users/:userId/ban', authUser, authRole('admin'), adminCtrl.banUser);
 
 
 // ============================================================

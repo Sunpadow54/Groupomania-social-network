@@ -2,13 +2,21 @@
 	<div class=" d-flex flex-column pa-3 grey lighten-4">
 		<v-btn 
             small
+            v-if="isActiveMember"
             color="secondary align-self-end mb-3"
-            @click.prevent="banUser()"
+            @click.prevent="toogleBanUser()"
         >
-			ban utilisateur
+			bannir Utilisateur
 		</v-btn>
-		<!--         <v-list-item v-for="bannedPost in bannedPosts" :key="bannedPost.date">
- -->
+        <v-btn 
+            small
+            v-if="!isActiveMember"
+            color="primary align-self-end mb-3"
+            @click.prevent="toogleBanUser()"
+        >
+			rétablir Utilisateur
+		</v-btn>
+
 		<v-card
 			v-for="bannedPost in bannedPosts"
 			:key="bannedPost.date"
@@ -63,35 +71,45 @@
 import { onMounted, ref } from "@vue/composition-api";
 export default {
 	name: "ModerateUser",
-	props: ["userId"],
-	setup(props, { root }) {
+	props: ["userId", "isActiveMember"],
+	setup(props, { root, emit }) {
 		const store = root.$store; // access to store in setup()
 		const bannedPosts = ref(null);
-		const userId2 = props.userId;
+		const thisUserId = props.userId;
 
 		// Function Fetch all unactive post/comments
 		const getAllUnactiveMsg = () => {
 			store
-				.dispatch("getData", `/admin/users/${userId2}`)
+				.dispatch("getData", `/admin/users/${thisUserId}`)
 				.then((data) => {
 					bannedPosts.value = data;
 				})
 				.catch((err) => console.log(err));
 		};
 
-        const banUser = () => {
-
-        }
+        // function to ban or unban user
+        const toogleBanUser = () => {
+            store
+                .dispatch("editData", {
+                    endpoint: `/admin/users/${thisUserId}/ban`,
+                    data: false,
+                    file: false
+                })
+                .then(() => {
+                    emit("hasBeenModerated") // send info that user has been moderated
+                })
+                .catch(err => console.log(err));
+        };
 
 		// Render
 		onMounted(() => {
 			getAllUnactiveMsg();
 		});
-
+        
 		/* return data */
 		return {
 			bannedPosts,
-            banUser
+            toogleBanUser,
 		};
 	},
 };
