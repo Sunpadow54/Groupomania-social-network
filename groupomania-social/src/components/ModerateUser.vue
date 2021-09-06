@@ -1,24 +1,18 @@
 <template>
-	<div class=" d-flex flex-column pa-3 grey lighten-4">
+	<div class=" d-flex flex-column pa-3 primary_light">
 		<v-btn 
             small
-            v-if="isActiveMember"
-            color="secondary align-self-end mb-3"
+            :color="isActiveMember ? 'secondary' : 'primary'"
+            class="align-self-end mb-3"
             @click.prevent="toogleBanUser()"
         >
-			bannir Utilisateur
+			{{ isActiveMember ? 'bannir Utilisateur' : 'rétablir Utilisateur'}}
 		</v-btn>
-        <v-btn 
-            small
-            v-if="!isActiveMember"
-            color="primary align-self-end mb-3"
-            @click.prevent="toogleBanUser()"
-        >
-			rétablir Utilisateur
-		</v-btn>
-
+        <h3 class="overline">
+            {{ bannedMsg.length === 0 ? "Aucun message modéré" : "Liste des messages modérés:"}}
+        </h3>
 		<v-card
-			v-for="bannedPost in bannedPosts"
+			v-for="bannedPost in bannedMsg"
 			:key="bannedPost.date"
 			elevation="0"
 			class="mb-2"
@@ -39,7 +33,7 @@
 								le {{ bannedPost.date }}
 							</span>
 						</v-card-text>
-						<v-card-text color="primary">{{ bannedPost.content }}</v-card-text>
+						<v-card-text>{{ bannedPost.content }}</v-card-text>
 					</v-col>
 					<v-col cols="auto">
 						<v-avatar
@@ -60,11 +54,11 @@
                         plain
                         small
                     >
-                    unban</v-btn>
+                        Rétablir
+                    </v-btn>
 				</v-card-actions>
 			</v-container>
 		</v-card>
-		<!-- </v-list-item> -->
 	</div>
 </template>
 
@@ -75,7 +69,7 @@ export default {
 	props: ["userId", "isActiveMember"],
 	setup(props, { root, emit }) {
 		const store = root.$store; // access to store in setup()
-		const bannedPosts = ref(null);
+		const bannedMsg = ref(null);
 		const thisUserId = props.userId;
 
 		// Function Fetch all unactive post/comments
@@ -83,7 +77,11 @@ export default {
 			store
 				.dispatch("getData", `/admin/users/${thisUserId}`)
 				.then((data) => {
-					bannedPosts.value = data;
+                    const allbannedMsg = data.map(bannedPost => ({
+                        ...bannedPost,
+                        date: formatDate(bannedPost.date)
+                    }))
+					bannedMsg.value = allbannedMsg;
 				})
 				.catch((err) => console.log(err));
 		};
@@ -102,6 +100,7 @@ export default {
                 .catch(err => console.log(err));
         };
 
+        // function to unmask message
         const restoreUserMsg = (msgType, id) => {
             store
                 .dispatch("editData", {
@@ -116,6 +115,12 @@ export default {
                 .catch(err => console.log(err));
         };
 
+        // function to format msg date
+        const formatDate = (dateToFormat) => {
+            const date = dateToFormat.split(' ');
+            return date[0] + ' à ' + date[1];
+        };
+
 		// Render
 		onMounted(() => {
 			getAllUnactiveMsg();
@@ -123,7 +128,7 @@ export default {
         
 		/* return data */
 		return {
-			bannedPosts,
+			bannedMsg,
             toogleBanUser,
             restoreUserMsg
 		};

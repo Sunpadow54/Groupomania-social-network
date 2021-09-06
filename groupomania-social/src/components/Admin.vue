@@ -2,29 +2,26 @@
 	<section class="container">
 		<h2 class="mb-6">Modération</h2>
 		<v-card>
-			<v-list>
+			<v-list class="pa-3">
 				<v-list-group
 					v-for="user in users"
 					:key="user.name"
-                    color="primary"
+                    active-class="primary_light"
 
 				>
                     <template v-slot:activator >
+                        <v-list-item-icon>
+                            <v-icon :color="user.color" v-text="user.icon"></v-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title v-text="user.name"></v-list-item-title>
                         </v-list-item-content>
                         <v-chip
-                            v-if="!user.isActive"
-                            color="secondary"
-                        >
-                            utilisateur exclu
-                        </v-chip>
-                        <v-chip
-                            v-if="user.moderatedMsg"
-                            outlined
-                            color="secondary"
-                        >
-                           {{user.moderatedMsg}} messages à modérer
+                                v-if="user.moderatedMsg"
+                                outlined
+                                color="secondary"
+                            >
+                            {{user.moderatedMsg + (user.moderatedMsg > 1 ? ' messages à modérer' : ' message à modérer') }}
                         </v-chip>
                     </template>
                     <ModerateUser 
@@ -56,7 +53,23 @@ export default {
 				.then((data) => {
                     // remove admins
                     const allUsers = data.filter(e => e.isAdmin === 0)
-					users.value = allUsers;
+                    const map1 = allUsers.map(u => {
+                        let iconAccount, colorAccount;
+                        if (!u.isActive) {
+                            iconAccount = 'mdi-account-lock-outline'
+                            colorAccount = 'secondary'
+                        }
+                        else if (u.moderatedMsg > 0) {
+                            iconAccount = 'mdi-account-alert-outline'
+                            colorAccount = 'warning'
+                        }
+                        else {
+                            iconAccount = 'mdi-account-outline'
+                            colorAccount = 'primary'
+                        }
+                        return ({ ...u, icon: iconAccount, color: colorAccount })
+                    })
+					users.value = map1
 				})
 				.catch((err) => console.log(err));
 		};

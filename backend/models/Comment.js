@@ -141,8 +141,9 @@ Comment.toogleActive = (idComment) => {
 Comment.findMasked = (idUser) => {
     // define the query
     const query = sql.format(`
-            SELECT id_comment as idComment, content_comment as content, 
-                date_comment as date
+            SELECT 
+                id_comment as idComment, content_comment as content,
+                DATE_FORMAT(date_comment, "%d/%m/%Y% %Hh%i:%s") as date
             FROM comments
             WHERE id_user = ? AND is_active = 0
             ORDER BY date_comment DESC

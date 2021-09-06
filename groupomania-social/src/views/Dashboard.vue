@@ -67,8 +67,6 @@ export default {
 <style scoped>
 main {
 	max-width: 900px;
-}
-div {
-	/* background-color: #ebedf0; */
+    min-height:100vh;
 }
 </style>

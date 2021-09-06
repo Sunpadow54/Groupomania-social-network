@@ -179,8 +179,9 @@ Post.toogleActive = (idPost) => {
 Post.findMasked = (idUser) => {
     // define the query
     const query = sql.format(`
-            SELECT id_post as idPost, title, content, img, 
-                date_post as date
+            SELECT 
+                id_post as idPost, title, content, img,
+                DATE_FORMAT(date_post, "%d/%m/%Y% %Hh%i:%s") as date
             FROM posts
             WHERE id_user = ? AND is_active = 0
             ORDER BY date_post DESC
