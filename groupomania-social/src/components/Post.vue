@@ -49,7 +49,7 @@
                             <!-- Admin moderate ? -->
                              <v-btn
                                 v-if="$store.state.isAdmin"
-                                @click="moderatePost(post.id_post)"
+                                @click="moderate('posts', post.id_post)"
                                 color="secondary"
                                 x-small
                                 outlined
@@ -133,6 +133,18 @@
 				<v-card-text>
 					{{ comment.content }}
 				</v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        v-if="$store.state.isAdmin"
+                        @click="moderate('comment', comment.id_comment)"
+                        color="secondary"
+                        class="ml-auto"
+                        x-small
+                        outlined
+                    >
+                        modérer le commentaire
+                    </v-btn>
+                </v-card-actions>
 			</v-card>
 		</v-sheet>
 	</section>
@@ -184,15 +196,20 @@ export default {
         }
 
         // Admin moderate Post
-        const moderatePost = (id) => {
+        const moderate = (msgType, id) => {
             store
                 .dispatch("editData", {
-                    endpoint: `/posts/${id}/moderate`,
+                    endpoint: `/${msgType}/${id}/moderate`,
                     data: false,
                     file: false
                 })
                 .then(() => {
-                    switchMode('admin')
+                    // if admin moderate a post => redirect to admin
+                    if(msgType === 'posts') {
+                        return switchMode('admin')
+                    }
+                    // if it was a comment => re-render comments
+                    getPost()
                 })
                 .catch(err => console.log(err));
         };
@@ -213,7 +230,7 @@ export default {
 			show,
             switchMode,
             closeComment,
-            moderatePost
+            moderate
 		};
 	},
 };
