@@ -17,11 +17,11 @@ const commentCtrl = require('../controllers/comment');
 // ------------------------- ROADS ----------------------------
 
 
-router.post('/', authUser, commentCtrl.createComment);
-router.put('/:id', authUser, commentCtrl.editComment);
-router.delete('/:id', authUser, commentCtrl.deleteComment);
-
-router.put('/:id/moderate', /* authUser, */ /* authRole('admin'),  *//* auth,  */commentCtrl.moderateComment);
+router.post('/', authUser, authRole('basic'),commentCtrl.createComment);
+router.put('/:id', authUser, authRole('basic'),commentCtrl.editComment);
+router.delete('/:id', authUser,authRole('basic'), commentCtrl.deleteComment);
+// admin
+router.put('/:id/moderate',authUser, authRole('admin'), commentCtrl.moderateComment);
 
 
 // ============================================================

@@ -17,9 +17,9 @@ const profileCtrl = require('../controllers/profile');
 // ============================================================
 // ------------------------- ROADS ----------------------------
 
-router.get('/:userId', authUser, profileCtrl.getProfile);
-router.put('/:userId', authUser, userSignUpRules(), validateSignUp, profileCtrl.editProfile);
-router.delete('/:userId', authUser, profileCtrl.deleteProfile);
+router.get('/:userId', authUser, authRole('basic'), profileCtrl.getProfile);
+router.put('/:userId', authUser, authRole('basic'), userSignUpRules(), validateSignUp, profileCtrl.editProfile);
+router.delete('/:userId', authUser, authRole('basic'), profileCtrl.deleteProfile);
 
 
 // ============================================================

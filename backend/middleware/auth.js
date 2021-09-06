@@ -47,14 +47,16 @@ const authRole = (role) => {
                 if (user.is_active === 0) {
                     throw 'You cannot enter'
                 };
+
                 // admin or basic user ?
                 const thisUserRole = user.is_admin === 1 ? 'admin' : 'basic';
 
-                if (thisUserRole !== role || thisUserRole !== 'admin') {
+                // check
+                if (thisUserRole === role || thisUserRole === 'admin') {
+                    next()
+                } else {
                     throw 'Unautorized'
-                };
-
-                next();
+                }
             })
             .catch(error => res.status(401).json({ error }));
 
