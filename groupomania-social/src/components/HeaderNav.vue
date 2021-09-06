@@ -27,6 +27,17 @@
 			<v-icon dark> mdi-plus </v-icon>
 		</v-btn>
 
+        <v-btn
+            v-if="isAdmin"
+			@click="switchMode('admin')"
+			class="mx-2 align-self-center"
+			small
+			icon
+			color="secondary"
+		>
+			Admin
+		</v-btn>
+
 		<v-btn
 			class="mx-2 align-self-center"
 			small
@@ -48,6 +59,7 @@ export default {
 		/* variables */
 		const store = root.$store; // access to store in setup()
 		let userName = ref(store.state.username);
+        let isAdmin = ref(store.state.isAdmin);
 
         // watch change made from updating account username
         watch(() => store.state.username, () => {
@@ -63,6 +75,7 @@ export default {
 		return {
 			switchMode,
 			userName,
+            isAdmin
 		};
 	},
 

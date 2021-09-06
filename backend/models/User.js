@@ -85,9 +85,25 @@ User.findOne = (where) => {
 User.findAll = () => {
     // define the query
     const query = sql.format(`
-                SELECT id_user as userId, email, 
-                    CONCAT(lastname, ' ', firstname) as name, is_active as isActive
-                FROM users`);
+            SELECT 
+                u.id_user AS userId, u.email AS email, 
+                CONCAT(u.lastname, ' ', u.firstname) AS name, 
+                u.is_active AS isActive, u.is_admin AS isAdmin,
+                nbrModeratedPost + nbrModeratedCom AS moderatedMsg
+            FROM users u
+            LEFT JOIN (
+                SELECT id_user,
+                SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) AS nbrModeratedPost
+                FROM posts
+                GROUP BY id_user
+            ) posts ON u.id_user = posts.id_user
+            LEFT JOIN (
+                SELECT id_user,
+                SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) AS nbrModeratedCom
+                FROM comments
+                GROUP BY id_user
+            ) comments ON u.id_user = comments.id_user
+        `);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {

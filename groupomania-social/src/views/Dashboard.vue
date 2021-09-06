@@ -3,7 +3,7 @@
 		<HeaderNav 
             v-on:switchMode="switchMode"
         />
-		<main class="container">
+		<main class="container back">
             <AllPosts
 				v-if="mode === 'dashboard'"
 				v-on:switchMode="switchMode"
@@ -27,6 +27,10 @@
                 v-if="mode === 'profile'" 
                 v-on:switchMode="switchMode" 
             />
+
+            <Admin
+                v-if="mode === 'admin' && $store.state.isAdmin"
+            />
 		</main>
 	</div>
 </template>
@@ -37,10 +41,11 @@ import AllPosts from "@/components/AllPosts.vue";
 import PostForm from "@/components/PostForm.vue";
 import Post from "@/components/Post.vue";
 import Profile from "@/components/Profile.vue";
+import Admin from "@/components/Admin.vue";
 
 export default {
 	name: "Dashboard",
-	components: { HeaderNav, AllPosts, PostForm, Post, Profile },
+	components: { HeaderNav, AllPosts, PostForm, Post, Profile, Admin },
 	data() {
 		return {
 			modeCreatePost: false,
@@ -64,6 +69,6 @@ main {
 	max-width: 900px;
 }
 div {
-	background-color: #ebedf0;
+	/* background-color: #ebedf0; */
 }
 </style>
