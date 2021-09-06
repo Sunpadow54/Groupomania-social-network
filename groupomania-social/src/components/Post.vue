@@ -27,13 +27,11 @@
 						>
                             mdi-fire
                         </v-icon>
-                        <!-- Post actions -->
-                        <v-card-actions 
-                            v-if="post.id_user === $store.state.userId"
-                            class="ml-auto"
-                        >
-                            <!-- Edit ? -->
+                        <!-- Post actions author -->
+                        <v-card-actions class="ml-auto">
+                            <!-- Author Edit ? -->
                             <v-btn
+                                v-if="post.id_user === $store.state.userId"
                                 @click="switchMode('editPost')"
                                 color="primary"
                                 class="mr-2"
@@ -42,11 +40,22 @@
                             >
                                 Edit
                             </v-btn>
-                            <!-- Delete ? -->
-                            <Delete 
+                            <!-- Author Delete ? -->
+                            <Delete
+                                v-if="post.id_user === $store.state.userId"
                                 :postId="postId" 
                                 v-on:switchMode="switchMode" 
                             />
+                            <!-- Admin moderate ? -->
+                             <v-btn
+                                v-if="$store.state.isAdmin"
+                                @click="moderatePost(post.id_post)"
+                                color="secondary"
+                                x-small
+                                outlined
+                            >
+                                modérer la publication
+                            </v-btn>
                         </v-card-actions>
 					</v-card-text>
 					<!-- Post title -->
@@ -174,6 +183,20 @@ export default {
             this.show = isOpen;
         }
 
+        // Admin moderate Post
+        const moderatePost = (id) => {
+            store
+                .dispatch("editData", {
+                    endpoint: `/posts/${id}/moderate`,
+                    data: false,
+                    file: false
+                })
+                .then(() => {
+                    switchMode('admin')
+                })
+                .catch(err => console.log(err));
+        };
+
 		// Render
 		onMounted(() => {
 			getPost();
@@ -189,7 +212,8 @@ export default {
 			post,
 			show,
             switchMode,
-            closeComment
+            closeComment,
+            moderatePost
 		};
 	},
 };

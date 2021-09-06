@@ -54,7 +54,8 @@
 				</v-row>
 				<v-card-actions class="justify-end">
 					<v-btn
-                      color="primary"
+                        @click.prevent="restoreUserMsg(bannedPost.idPost ? 'posts' : 'comment', bannedPost.idPost || bannedPost.idComment)"
+                        color="primary"
                         elevation="2"
                         plain
                         small
@@ -101,6 +102,20 @@ export default {
                 .catch(err => console.log(err));
         };
 
+        const restoreUserMsg = (msgType, id) => {
+            store
+                .dispatch("editData", {
+                    endpoint: `/${msgType}/${id}/moderate`,
+                    data: false,
+                    file: false
+                })
+                .then(() => {
+                    getAllUnactiveMsg() // rerender message moderated
+                    emit("hasBeenModerated") // send info that user has been moderated
+                })
+                .catch(err => console.log(err));
+        };
+
 		// Render
 		onMounted(() => {
 			getAllUnactiveMsg();
@@ -110,6 +125,7 @@ export default {
 		return {
 			bannedPosts,
             toogleBanUser,
+            restoreUserMsg
 		};
 	},
 };

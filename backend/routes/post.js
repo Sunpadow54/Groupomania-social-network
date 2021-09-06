@@ -24,8 +24,8 @@ router.delete('/:id', authUser, postCtrl.deletePost);
 router.get('/', authUser, postCtrl.getAllPosts);
 router.get('/:id', authUser, postCtrl.getOnePost);
 router.post('/:id/vote', authUser, postCtrl.vote);
-
-router.put('/:id/moderate', /* authUser, */ /* authRole('admin'),  *//* auth,  */postCtrl.moderatePost);
+// admin
+router.put('/:id/moderate', authUser, authRole('admin'),postCtrl.moderatePost);
 
 
 // ============================================================
