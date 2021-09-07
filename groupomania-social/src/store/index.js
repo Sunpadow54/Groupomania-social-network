@@ -4,13 +4,19 @@ const url = "http://localhost:3000/api";
 
 Vue.use(Vuex);
 
+// variable
+const defaultState = {
+    token: "",
+    userId: "",
+    username: "",
+    isAdmin: false,
+    isActive: false,
+}
+
+// Store
 export default new Vuex.Store({
     state: {
-        token: "",
-        userId: "",
-        username: "",
-        isAdmin: false,
-        isActive: false,
+        ...defaultState
     },
 
     mutations: {
@@ -24,6 +30,9 @@ export default new Vuex.Store({
             state.isAdmin = data.isAdmin;
             state.isActive = data.isActive;
         },
+        resetState(state) {
+            Object.assign(state, defaultState)
+        }
     },
 
     actions: {

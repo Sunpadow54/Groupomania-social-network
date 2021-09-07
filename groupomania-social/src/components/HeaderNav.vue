@@ -72,7 +72,7 @@
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn 
-                    @click="switchMode('profile')"
+                    @click="disconnect()"
                     v-bind="attrs"
                     v-on="on"
                     icon
@@ -95,6 +95,7 @@ export default {
 	setup(props, { emit, root }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
+        const router = root.$router;
 		let userName = ref(store.state.username);
         let isAdmin = ref(store.state.isAdmin);
 
@@ -108,11 +109,16 @@ export default {
 			emit("switchMode", mode);
 		};
 
+        const disconnect = () => {
+            store.commit('resetState');
+            router.push({ name: "Home" });
+        }
 		/* return data */
 		return {
 			switchMode,
 			userName,
-            isAdmin
+            isAdmin,
+            disconnect
 		};
 	},
 
