@@ -30,7 +30,7 @@ Vote.create = (vote) => {
             // error
             if (err) return reject(err.sqlMessage);
             // success
-            resolve('You voted');
+            resolve(vote.vote);
         });
     })
 };
@@ -62,7 +62,7 @@ Vote.delete = (where) => {
             // error
             if (err) return reject(err);
             // success
-            resolve('reset vote');
+            resolve(null);
         });
     })
 };
@@ -82,7 +82,7 @@ Vote.change = (newVote) => {
             // error
             if (err) return reject(err);
             // success
-            resolve('You changed your mind');
+            resolve(newVote.vote);
         });
     })
 };

@@ -121,7 +121,7 @@ exports.vote = (req, res, next) => {
                 });
                 // insert this new vote in db
                 Vote.create(newVote)
-                    .then(message => res.status(201).json({ message }))
+                    .then(data => res.status(201).json( data ))
                     .catch(error => res.status(500).json({ error }));
             }
 
@@ -132,7 +132,7 @@ exports.vote = (req, res, next) => {
                     postId: req.params.id,
                     userId: res.locals.userId
                 })
-                    .then(message => res.status(201).json({ message }))
+                    .then(data => res.status(201).json( data ))
                     .catch(error => res.status(500).json({ error }));
             }
 
@@ -144,7 +144,7 @@ exports.vote = (req, res, next) => {
                     postId: req.params.id,
                     userId: res.locals.userId
                 })
-                    .then(message => res.status(201).json({ message }))
+                    .then(data => res.status(201).json( data ))
                     .catch(error => res.status(500).json({ error }));
             }
         })

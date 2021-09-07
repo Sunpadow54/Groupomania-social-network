@@ -164,7 +164,6 @@ export default {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
                     .then((postFetched) => {
-                        console.log(postFetched);
                         post.value = {
                             ...postFetched,
                             date: formatDate(postFetched.date),
