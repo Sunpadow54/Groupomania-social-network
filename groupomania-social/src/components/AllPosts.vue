@@ -63,17 +63,12 @@
 					</v-card-subtitle>
 				</v-card>
 				<!-- card likes / dislikes -->
-				<div class="d-flex flex-column ma-2">
-					<v-btn x-small icon>
-						<v-icon>mdi-thumb-up-outline</v-icon>
-					</v-btn>
-					<span class="text-caption text-center">
-						{{ post.likes ? post.likes : "0" }}
-					</span>
-					<v-btn x-small icon>
-						<v-icon>mdi-thumb-down-outline</v-icon>
-					</v-btn>
-				</div>
+                <Vote 
+                    :likes="post.likes" 
+                    :dislikes="post.dislikes" 
+                    :postId="postId"
+                    :userVote="post.userVote"
+                />
 			</div>
 		</v-card>
 	</section>
@@ -81,9 +76,11 @@
 
 <script>
 import { ref, onMounted } from "@vue/composition-api";
+import Vote from "@/components/Vote.vue";
 
 export default {
 	name: "AllPosts",
+    components: { Vote },
 
 	setup(context, { root, emit }) {
 		const store = root.$store; // access to store in setup()

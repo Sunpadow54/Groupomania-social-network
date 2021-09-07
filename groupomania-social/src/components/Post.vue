@@ -72,7 +72,8 @@
                 <Vote 
                     :likes="post.likes" 
                     :dislikes="post.dislikes" 
-                    :postId="postId" 
+                    :postId="postId"
+                    :userVote="post.userVote"
                 />
 			</div>
 		</v-card>

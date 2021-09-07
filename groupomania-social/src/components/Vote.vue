@@ -1,15 +1,29 @@
 <template>
 	<v-sheet class="d-flex flex-column pa-2 elevation-1">
 		<!-- likes -->
-		<v-btn @click.prevent="vote('like')" text x-small icon>
-			<v-icon>mdi-thumb-up-outline</v-icon>
+		<v-btn 
+            @click.prevent="vote('like')"
+            text 
+            x-small 
+            icon
+        >
+			<v-icon :color="userVote === 'like' ? 'primary' : ''">
+                mdi-thumb-up-outline
+            </v-icon>
 		</v-btn>
 		<span class="text-caption text-center">
 			{{ likes ? likes : "0" }}
 		</span>
 		<!-- dislikes -->
-		<v-btn @click.prevent="vote('dislike')" text x-small icon>
-			<v-icon>mdi-thumb-down-outline</v-icon>
+		<v-btn 
+            @click.prevent="vote('dislike')"
+            text 
+            x-small 
+            icon
+        >
+			<v-icon :color="userVote === 'dislike' ? 'secondary' : ''">
+                mdi-thumb-down-outline
+            </v-icon>
 		</v-btn>
 		<span class="text-caption text-center">
 			{{ dislikes ? dislikes : "0" }}
@@ -20,7 +34,7 @@
 <script>
 export default {
 	name: "Vote",
-	props: ["likes", "dislikes", "postId"],
+	props: ["likes", "dislikes", "postId", "userVote"],
 	setup(props, { root }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()

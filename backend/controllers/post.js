@@ -83,7 +83,7 @@ exports.deletePost = (req, res, next) => {
 
 
 exports.getAllPosts = (req, res, next) => {
-    Post.findAll()
+    Post.findAll(res.locals.userId)
         .then(posts => res.status(201).json(posts))
         .catch(error => res.status(500).json({ error }));
 };
@@ -91,7 +91,7 @@ exports.getAllPosts = (req, res, next) => {
 
 exports.getOnePost = (req, res, next) => {
     // get the post from id post
-    Post.findOne(req.params.id)
+    Post.findOne(res.locals.userId, req.params.id)
         .then(post => {
             // get all comments of the Post
             Comment.findAll(req.params.id)

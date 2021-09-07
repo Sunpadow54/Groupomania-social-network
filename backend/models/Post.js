@@ -75,36 +75,37 @@ Post.delete = (post) => {
 // find all Posts with authors full name & number of comments & latest comment date & vote
 // ordered by latest post date or comment date
 // (check if post/comment/user is active)
-Post.findAll = () => {
+Post.findAll = (idUser) => {
     // define the query
     const query = sql.format(`
-        SELECT 
-            p.id_post, p.title, p.content, p.img,
-            DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") AS date,
-            CONCAT(u.lastname, ' ', u.firstname) AS author,
-            nbrComment, likes, dislikes,
-            DATE_FORMAT(latestCommDate, "%d/%m/%Y% %H:%i:%s") AS latestCom
-        FROM posts p
-        JOIN users u ON p.id_user = u.id_user
-        LEFT JOIN (
-                SELECT c.id_post, 
-                    COUNT(*) AS nbrComment, 
-                    MAX(c.date_comment) AS latestCommDate
-                FROM comments c
-                JOIN users u ON c.id_user = u.id_user
-                WHERE c.is_active = 1 AND u.is_active = 1
-                GROUP BY c.id_post
-            ) comments ON p.id_post = comments.id_post
-        LEFT JOIN (
-            SELECT id_post,
-                SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
-                SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
-            FROM votes 
-            GROUP BY id_post
-        ) votes ON p.id_post = votes.id_post
-        WHERE p.is_active = 1 AND u.is_active = 1
-        ORDER BY COALESCE(latestCommDate, p.date_post) DESC
-        `
+            SELECT 
+                p.id_post, p.title, p.content, p.img,
+                DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") AS date,
+                CONCAT(u.lastname, ' ', u.firstname) AS author,
+                DATE_FORMAT(latestCommDate, "%d/%m/%Y% %H:%i:%s") AS latestCom,
+                nbrComment, likes, dislikes, userVote
+            FROM posts p
+            JOIN users u ON p.id_user = u.id_user
+            LEFT JOIN (
+                    SELECT c.id_post, 
+                        COUNT(*) AS nbrComment, 
+                        MAX(c.date_comment) AS latestCommDate
+                    FROM comments c
+                    JOIN users u ON c.id_user = u.id_user
+                    WHERE c.is_active = 1 AND u.is_active = 1
+                    GROUP BY c.id_post
+                ) comments ON p.id_post = comments.id_post
+            LEFT JOIN (
+                SELECT id_post,
+                    SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
+                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes,
+                    CASE WHEN id_user = ? THEN vote ELSE null END AS userVote
+                FROM votes 
+                GROUP BY id_post
+            ) votes ON p.id_post = votes.id_post
+            WHERE p.is_active = 1 AND u.is_active = 1
+            ORDER BY COALESCE(latestCommDate, p.date_post) DESC
+        `, idUser
     );
 
     // ask SQL
@@ -119,25 +120,28 @@ Post.findAll = () => {
 };
 
 
-Post.findOne = (id) => {
+Post.findOne = (idUser, id) => {
+    const inserts = [idUser, id];
     // define the query
     const query = sql.format(`
             SELECT p.id_post, p.id_user, p.title, p.content, p.img, 
                 DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author,
-                likes, dislikes
+                likes, dislikes, userVote
             FROM posts AS p
             JOIN users AS u ON p.id_user = u.id_user
             LEFT JOIN (
                 SELECT id_post,
                     SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
-                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
+                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes,
+                    CASE WHEN id_user = ? THEN vote ELSE null END AS userVote
                 FROM votes 
                 GROUP BY id_post
             ) votes ON p.id_post = votes.id_post
             WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
-            `, id
+            `, inserts
     );
+    console.log(query);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
