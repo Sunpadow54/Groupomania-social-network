@@ -69,21 +69,11 @@
 					<v-img :src="post.img" width="100%" height="600"></v-img>
 				</v-sheet>
 
-				<!-- Post likes / dislikes -->
-				<v-sheet class="d-flex flex-column pa-2 elevation-1">
-					<v-btn x-small icon>
-						<v-icon>mdi-thumb-up-outline</v-icon>
-					</v-btn>
-					<span class="text-caption text-center">
-						{{ post.likes ? post.likes : "0" }}
-					</span>
-					<v-btn x-small icon>
-						<v-icon>mdi-thumb-down-outline</v-icon>
-					</v-btn>
-					<span class="text-caption text-center">
-						{{ post.dislikes ? post.dislikes : "0" }}
-					</span>
-				</v-sheet>
+                <Vote 
+                    :likes="post.likes" 
+                    :dislikes="post.dislikes" 
+                    :postId="postId" 
+                />
 			</div>
 		</v-card>
 
@@ -154,10 +144,11 @@
 import { ref, onMounted, watch } from "@vue/composition-api";
 import CreateComment from "@/components/CreateComment.vue";
 import Delete from "@/components/Delete.vue";
+import Vote from "@/components/Vote.vue";
 
 export default {
 	name: "Post",
-	components: { CreateComment, Delete },
+	components: { CreateComment, Delete, Vote },
 	props: ["postId"],
 
 	setup(context, { root, emit }) {
@@ -166,7 +157,7 @@ export default {
 		const post = ref(null);
 		let show = ref(false);
 
-        /* function */
+        /* functions */
         // Create Post
 		const getPost = () => {
 			store

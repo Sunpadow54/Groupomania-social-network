@@ -107,7 +107,7 @@ exports.getOnePost = (req, res, next) => {
 
 exports.vote = (req, res, next) => {
     // search if the user has already vote for the post, and what
-    Vote.findOne({ postId: req.params.id, userId: req.body.userId })
+    Vote.findOne({ postId: req.params.id, userId: res.locals.userId })
         .then(oldVote => {
 
             let hasAlreadyVote = oldVote ? oldVote.vote : false;
@@ -117,7 +117,7 @@ exports.vote = (req, res, next) => {
                 const newVote = new Vote({
                     vote: req.body.vote,
                     postId: req.params.id,
-                    userId: req.body.userId
+                    userId: res.locals.userId
                 });
                 // insert this new vote in db
                 Vote.create(newVote)
@@ -130,7 +130,7 @@ exports.vote = (req, res, next) => {
                 // delete/reset vote
                 Vote.delete({
                     postId: req.params.id,
-                    userId: req.body.userId
+                    userId: res.locals.userId
                 })
                     .then(message => res.status(201).json({ message }))
                     .catch(error => res.status(500).json({ error }));
@@ -142,7 +142,7 @@ exports.vote = (req, res, next) => {
                 Vote.change({
                     vote: req.body.vote,
                     postId: req.params.id,
-                    userId: req.body.userId
+                    userId: res.locals.userId
                 })
                     .then(message => res.status(201).json({ message }))
                     .catch(error => res.status(500).json({ error }));
