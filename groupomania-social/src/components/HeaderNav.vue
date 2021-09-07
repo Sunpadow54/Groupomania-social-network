@@ -42,7 +42,7 @@
         </v-tooltip>
 
         <v-btn
-            v-if="isAdmin"
+            v-if="$store.state.isAdmin"
 			@click="switchMode('admin')"
 			class="mx-1 align-self-center"
 			small
@@ -63,7 +63,7 @@
                     class="mx-1"
                 >
                 <v-icon class="mr-2">mdi-account-circle</v-icon>
-                    {{ userName }}
+                    {{ $store.getters.getUsername }}
                 </v-btn>
             </template>
             <span>Profil</span>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { ref, watch, } from "@vue/composition-api";
+import { ref } from "@vue/composition-api";
 export default {
 	name: "HeaderNav",
 
@@ -97,13 +97,7 @@ export default {
 		const store = root.$store; // access to store in setup()
         const router = root.$router;
 		let userName = ref(store.state.username);
-        let isAdmin = ref(store.state.isAdmin);
 
-        // watch change made from updating account username
-        watch(() => store.state.username, () => {
-            userName.value = store.getters.getUsername;
-        })
-        
 		/* functions */
 		const switchMode = (mode) => {
 			emit("switchMode", mode);
@@ -117,7 +111,6 @@ export default {
 		return {
 			switchMode,
 			userName,
-            isAdmin,
             disconnect
 		};
 	},
