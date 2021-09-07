@@ -28,7 +28,7 @@ Comment.create = (newComment) => {
             // error
             if (err) return reject(err.sqlMessage);
             // success
-            resolve('Comment is successfully created');
+            resolve(res);
         });
     })
 }

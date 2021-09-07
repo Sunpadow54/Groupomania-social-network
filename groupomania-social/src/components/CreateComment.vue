@@ -51,8 +51,10 @@ export default {
 					hasAuth: true,
 					file: null,
 				})
-				.then(() => {
-                    emit('closeComment', false)
+				.then((commentSuccess) => {
+                    // add the newly created comment
+                    emit('addComment', commentSuccess)
+                    
                 })
 				.catch((err) => console.log({ err }));
 		};

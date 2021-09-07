@@ -99,7 +99,7 @@
 						<v-divider></v-divider>
 						<CreateComment 
                             :postId="postId"
-                            v-on:closeComment="closeComment" 
+                            v-on:addComment="addComment" 
                         />
 					</div>
 				</v-expand-transition>
@@ -164,6 +164,7 @@ export default {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
                     .then((postFetched) => {
+                        console.log(postFetched);
                         post.value = {
                             ...postFetched,
                             date: formatDate(postFetched.date),
@@ -183,8 +184,10 @@ export default {
 		};
 
         // new comment ?
-        function closeComment (isOpen){
-            this.show = isOpen;
+        function addComment (comment){
+            this.show = !this.show;
+            // add the newly created comment
+            this.post.comment.unshift(comment);
         }
 
         // Admin moderate Post
@@ -215,13 +218,14 @@ export default {
         watch(() => show.value, () => {
             getPost();
         })
+
         
 		/*  return data */
 		return {
 			post,
 			show,
             switchMode,
-            closeComment,
+            addComment,
             moderate
 		};
 	},
