@@ -40,7 +40,7 @@
 						{{ post.title }}
 					</v-card-title>
 					<!-- card image -->
-					<v-img :src="post.img" height="330px"></v-img>
+					<v-img :src="post.img" height="450px"></v-img>
 					<!-- card bottom -->
 					<v-card-subtitle
 						@click="goToPost(post.id_post, 'onePost')"

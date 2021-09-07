@@ -12,6 +12,7 @@ export default new Vuetify({
 				secondary: '#d1515a',
                 transparent: 'transparent',
                 grey: '#2a2a2e',
+                light_grey:'#afafaf',
 				accent: '#8c9eff',
 				error: '#d1515a',
                 back: '#ebedf0'

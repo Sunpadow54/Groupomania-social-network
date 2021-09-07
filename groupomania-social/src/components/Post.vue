@@ -1,6 +1,6 @@
 <template>
 	<section class="container">
-        <h2>Post & comments</h2>
+        <h2 class="body-1 mb-6">publication & commentaires</h2>
 		<!-- Post -->
 		<v-card elevation="2" outlined>
 			<div class="d-flex">
@@ -66,7 +66,7 @@
 						{{ post.content }}
 					</v-card-text>
 					<!-- Post image -->
-					<v-img :src="post.img" height="330px"></v-img>
+					<v-img :src="post.img" width="100%" height="600"></v-img>
 				</v-sheet>
 
 				<!-- Post likes / dislikes -->

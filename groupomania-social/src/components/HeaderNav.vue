@@ -1,36 +1,50 @@
 <template>
 	<v-app-bar dark color="grey">
 		<v-toolbar-title class="align-self-center">
-			<v-btn @click="switchMode('dashboard')">
-				<img
-					src="../assets/groupomania-logo_colors.svg"
-					alt=""
-					width="164"
-					height="auto"
-				/>
-			</v-btn>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        @click="switchMode('dashboard')"
+                        v-bind="attrs"
+                        v-on="on"
+                        text
+                    >
+                        <img
+                            src="../assets/groupomania-logo_colors.svg"
+                            alt=""
+                            width="164"
+                            height="auto"
+                        />
+                    </v-btn>
+                </template>
+                <span>Retour aux publications</span>
+            </v-tooltip>
 		</v-toolbar-title>
 
 		<v-spacer></v-spacer>
 
-		<v-toolbar-title v-model="userName" class="mr-2 align-self-center text-capitalize">
-			{{ userName }}
-		</v-toolbar-title>
-
-		<v-btn
-			@click="switchMode('createPost')"
-			class="mx-2 align-self-center"
-			small
-			icon
-			color="white"
-		>
-			<v-icon dark> mdi-plus </v-icon>
-		</v-btn>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    @click="switchMode('createPost')"
+                    class="mx-1 align-self-center"
+                    v-bind="attrs"
+                    v-on="on"
+                    small
+                    icon
+                    tile
+                    color="white"
+                >
+                    <v-icon dark> mdi-plus </v-icon>
+                </v-btn>
+            </template>
+            <span>Créer un Post</span>
+        </v-tooltip>
 
         <v-btn
             v-if="isAdmin"
 			@click="switchMode('admin')"
-			class="mx-2 align-self-center"
+			class="mx-1 align-self-center"
 			small
 			icon
 			color="secondary"
@@ -38,15 +52,38 @@
 			Admin
 		</v-btn>
 
-		<v-btn
-			class="mx-2 align-self-center"
-			small
-			depressed
-			color="grey"
-			@click="switchMode('profile')"
-		>
-			Profil
-		</v-btn>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn 
+                    @click="switchMode('profile')"
+                    v-bind="attrs"
+                    v-on="on"
+                    text
+                    depressed
+                    class="mx-1"
+                >
+                <v-icon class="mr-2">mdi-account-circle</v-icon>
+                    {{ userName }}
+                </v-btn>
+            </template>
+            <span>Profil</span>
+        </v-tooltip>
+
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn 
+                    @click="switchMode('profile')"
+                    v-bind="attrs"
+                    v-on="on"
+                    icon
+                >
+                    <v-icon>
+                        mdi-logout
+                    </v-icon>
+                </v-btn>
+            </template>
+            <span>se déconnecter</span>
+        </v-tooltip>
 	</v-app-bar>
 </template>
 
