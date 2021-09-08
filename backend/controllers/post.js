@@ -32,7 +32,7 @@ exports.createPost = (req, res, next) => {
 
 exports.editPost = (req, res, next) => {
     // Find the post to check if the user is the author of the Post
-    Post.findOne(req.params.id)
+    Post.findOne(res.locals.userId, req.params.id)
         .then(dbPost => {
             const isAuthor = dbPost.id_user === res.locals.userId ? true : false;
 
@@ -64,7 +64,7 @@ exports.editPost = (req, res, next) => {
 
 exports.deletePost = (req, res, next) => {
     // Find the post to check if the user is the author of the Post
-    Post.findOne(req.params.id)
+    Post.findOne(res.locals.userId, req.params.id)
         .then(dbPost => {
             const isAuthor = dbPost.id_user === res.locals.userId ? true : false;
 
