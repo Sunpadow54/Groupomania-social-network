@@ -64,7 +64,6 @@ export default {
 						nbrDislikes.value--;
 						oldVote.value = vote;
 					}
-
 					break;
 
 				case "dislike":
@@ -77,7 +76,6 @@ export default {
 						nbrLikes.value--;
 						oldVote.value = vote;
 					}
-
 					break;
 
 				case null:

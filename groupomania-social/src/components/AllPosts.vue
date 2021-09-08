@@ -4,7 +4,7 @@
 		<!-- All Posts -->
 		<v-card
 			v-for="post in posts"
-			v-bind:key="post.idPost"
+			v-bind:key="post.id_post"
 			elevation="2"
 			outlined
 			class="mb-5"
@@ -66,7 +66,7 @@
                 <Vote 
                     :likes="post.likes" 
                     :dislikes="post.dislikes" 
-                    :postId="postId"
+                    :postId="post.id_post"
                     :userVote="post.userVote"
                 />
 			</div>
