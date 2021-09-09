@@ -1,10 +1,12 @@
 // Post Controls
 // ------------------------- IMPORTS -------------------------
 
+const fs = require('fs'); // package from node (file system)
 // ---- import Models
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const Vote = require('../models/Vote');
+
 
 
 // ============================================================
@@ -39,9 +41,9 @@ exports.editPost = (req, res, next) => {
             // the user is not the author
             if (!isAuthor) { throw 'You are not the author of the Post' };
 
-            // the user is the author
+            // the user is the author :
             const editedPost =  req.file ? // check if user has made a new upload of an image
-            { //yes
+            { // yes
                 ...JSON.parse(req.body.post),
                     imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                     postId: req.params.id,
@@ -51,9 +53,19 @@ exports.editPost = (req, res, next) => {
                 imgUrl: dbPost.img,
                 postId: req.params.id,
                 userId: res.locals.userId
-            }; //no
+            }; // no
+            
+            // Delete old image if a new one is upload
+            if(req.file) {
+                // seach name of file
+                const filename = dbPost.img.split('/images/')[1];
+                // if the file exist delete it
+                if (fs.existsSync(`images/${filename}`)) {
+                    fs.unlinkSync(`images/${filename}`);
+                }
+            }
 
-            // modify in db
+            // Modify in db
             Post.edit(editedPost)
                 .then(message => res.status(201).json({ message }))
                 .catch(error => res.status(500).json({ error }));
@@ -73,8 +85,21 @@ exports.deletePost = (req, res, next) => {
 
             // the user is the author
             const ids = { postId: req.params.id, userId: res.locals.userId }
+
+            // Delete in Db
             Post.delete(ids)
-                .then(message => res.status(201).json({ message }))
+                .then(message => {
+                    // Delete image if exist
+                    if (dbPost.img) {
+                        const filename = dbPost.img.split('/images/')[1]; // seach name of file
+                        // if the file exist delete it
+                        if (fs.existsSync(`images/${filename}`)) {
+                            fs.unlinkSync(`images/${filename}`);
+                        }
+                    }
+                    // send to front
+                    res.status(201).json({ message })
+                })
                 .catch(error => res.status(500).json({ error }));
 
         })

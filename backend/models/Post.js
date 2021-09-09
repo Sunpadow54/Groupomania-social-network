@@ -141,7 +141,6 @@ Post.findOne = (idUser, id) => {
             WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
             `, inserts
     );
-    console.log(query);
     // ask SQL
     return new Promise((resolve, reject) => {
         sql.query(query, (err, res) => {
