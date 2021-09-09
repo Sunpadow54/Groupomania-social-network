@@ -20,7 +20,7 @@ exports.getAllUsers = (req, res, next) => {
 
 exports.banUser = (req, res, next) => {
     User.ban(req.params.userId)
-        .then(message => res.status(201).json({ message }))
+        .then(message => res.status(201).json(req.params.userId))
         .catch(error => res.status(500).json({ error }));
 };
 

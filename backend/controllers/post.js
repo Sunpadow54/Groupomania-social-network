@@ -181,6 +181,6 @@ exports.vote = (req, res, next) => {
 exports.moderatePost = (req, res, next) => {
     // change isactive bolean in db to hide posts
     Post.toogleActive(req.params.id)
-        .then(() => res.status(201).json('this post has been moderated'))
+        .then(() => res.status(201).json(req.params.id ))
         .catch(error => res.status(500).json({ error }));
 };

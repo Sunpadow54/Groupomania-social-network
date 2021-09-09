@@ -66,10 +66,11 @@
 import { onMounted, ref } from "@vue/composition-api";
 export default {
 	name: "ModerateUser",
-	props: ["userId", "isActiveMember"],
+	props: ["userId", "isActiveMember", "nbrMsg"],
 	setup(props, { root, emit }) {
+        /* variables */
 		const store = root.$store; // access to store in setup()
-		const bannedMsg = ref(null);
+		const bannedMsg = ref('');
 		const thisUserId = props.userId;
 
 		// Function Fetch all unactive post/comments
@@ -94,8 +95,8 @@ export default {
                     data: false,
                     file: false
                 })
-                .then(() => {
-                    emit("hasBeenModerated") // send info that user has been moderated
+                .then((userIdModerated) => {
+                    emit("userBeenModerated", userIdModerated ) // send info that user has been moderated
                 })
                 .catch(err => console.log(err));
         };
@@ -108,12 +109,26 @@ export default {
                     data: false,
                     file: false
                 })
-                .then(() => {
-                    getAllUnactiveMsg() // rerender message moderated
-                    emit("hasBeenModerated") // send info that user has been moderated
+                .then((idMsg) => {
+                    deleteRestoredMsg(idMsg, msgType);
+                    emit("msgBeenModerated", thisUserId)
                 })
                 .catch(err => console.log(err));
         };
+
+        // function to remove msg restored
+        function deleteRestoredMsg(idMsg, msgType) {
+            let index;
+
+            if (msgType === 'posts') {
+                index = bannedMsg.value.findIndex(msg => msg.idPost == idMsg);
+            }
+            if (msgType === 'comment') {
+                index = bannedMsg.value.findIndex(msg => msg.idComment == idMsg);
+            }
+
+            bannedMsg.value.splice(index, 1);
+		}
 
         // function to format msg date
         const formatDate = (dateToFormat) => {

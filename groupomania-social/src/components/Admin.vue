@@ -37,8 +37,10 @@
                     </template>
                     <ModerateUser 
                         :userId="user.userId" 
-                        :isActiveMember="user.isActive" 
-                        v-on:hasBeenModerated="hasBeenModerated" />
+                        :isActiveMember="user.isActive"
+                        v-on:userBeenModerated="userBeenModerated" 
+                        v-on:msgBeenModerated="msgBeenModerated"
+                    />
 					
 				</v-list-group>
 			</v-list>
@@ -47,15 +49,17 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from "@vue/composition-api";
+import { onMounted, ref } from "@vue/composition-api";
 import ModerateUser from "@/components/ModerateUser"
 export default {
 	name: "Admin",
     components: { ModerateUser },
 	setup(context, {root,}) {
+        /* variables */
         const store = root.$store; // access to store in setup()
-        const users = ref(null);
-        let moderationMade = ref(false) // used to watch the moderations made inside child
+        const users = ref('');
+
+        /* functions */
 
         // Function Fetch all users
         const getAllUsers = () => {
@@ -64,7 +68,31 @@ export default {
 				.then((data) => {
                     // remove admins
                     const allUsers = data.filter(e => e.isAdmin === 0)
-                    const map1 = allUsers.map(u => {
+                    getColorAndIcon(allUsers);
+				})
+				.catch((err) => console.log(err));
+		};
+
+        // function when user is ban or unban : show new colors & user icon
+        function userBeenModerated(userIdModerated) {
+            const index = users.value.findIndex(user => user.userId == userIdModerated);
+            // modify the user moderated inside users
+            users.value[index].isActive = !users.value[index].isActive
+            // get the new icon and color
+            getColorAndIcon(users.value)
+		}
+
+        // function when messages has been unmask : show new colors & number of message & user icon
+        function msgBeenModerated(userId) {
+            const index = users.value.findIndex(user => user.userId == userId);
+            // modify the number of message moderated inside users
+            users.value[index].moderatedMsg--
+            // get the new icon and color
+            getColorAndIcon(users.value)
+        }
+
+        const getColorAndIcon = (allUsers) => {
+             const map1 = allUsers.map(u => {
                         let iconAccount, colorAccount;
                         if (!u.isActive) {
                             iconAccount = 'mdi-account-lock-outline'
@@ -80,29 +108,19 @@ export default {
                         }
                         return ({ ...u, icon: iconAccount, color: colorAccount })
                     })
-					users.value = map1
-				})
-				.catch((err) => console.log(err));
-		};
-
-        function hasBeenModerated() {
-			moderationMade.value = !moderationMade.value
-		}
+            users.value = map1;
+        }
 
         // Render
 		onMounted(() => {
 			getAllUsers();
 		});
-        
-        // watch if moderations inside child component has been made
-        watch(() => moderationMade.value, () => {
-            getAllUsers()
-        })
 
         /* return data */
         return {
             users,
-            hasBeenModerated
+            userBeenModerated,
+            msgBeenModerated
 
         }
     },
