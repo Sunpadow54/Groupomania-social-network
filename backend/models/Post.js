@@ -78,7 +78,7 @@ Post.delete = (post) => {
 Post.findAll = (idUser) => {
     // define the query
     const query = sql.format(`
-            SELECT 
+            SELECT
                 p.id_post, p.title, p.content, p.img,
                 DATE_FORMAT(p.date_post, "%d/%m/%Y% %H:%i:%s") AS date,
                 CONCAT(u.lastname, ' ', u.firstname) AS author,
@@ -87,8 +87,8 @@ Post.findAll = (idUser) => {
             FROM posts p
             JOIN users u ON p.id_user = u.id_user
             LEFT JOIN (
-                    SELECT c.id_post, 
-                        COUNT(*) AS nbrComment, 
+                    SELECT c.id_post,
+                        COUNT(*) AS nbrComment,
                         MAX(c.date_comment) AS latestCommDate
                     FROM comments c
                     JOIN users u ON c.id_user = u.id_user
@@ -98,15 +98,20 @@ Post.findAll = (idUser) => {
             LEFT JOIN (
                 SELECT id_post,
                     SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
-                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes,
-                    CASE WHEN id_user = ? THEN vote ELSE null END AS userVote
-                FROM votes 
+                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
+                FROM votes
                 GROUP BY id_post
             ) votes ON p.id_post = votes.id_post
+            LEFT JOIN (
+                SELECT id_post,
+                    vote as userVote
+                FROM votes WHERE id_user = ?
+            ) vote ON p.id_post = vote.id_post
             WHERE p.is_active = 1 AND u.is_active = 1
             ORDER BY COALESCE(latestCommDate, p.date_post) DESC
         `, idUser
     );
+    console.log(query);
 
     // ask SQL
     return new Promise((resolve, reject) => {
@@ -114,6 +119,7 @@ Post.findAll = (idUser) => {
             // error
             if (err) return reject(err);
             // success
+            console.log(res);
             resolve(res);
         });
     })
@@ -133,11 +139,15 @@ Post.findOne = (idUser, id) => {
             LEFT JOIN (
                 SELECT id_post,
                     SUM(CASE WHEN vote = 'like' THEN 1 ELSE 0 END) AS likes,
-                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes,
-                    CASE WHEN id_user = ? THEN vote ELSE null END AS userVote
+                    SUM(CASE WHEN vote = 'dislike' THEN 1 ELSE 0 END) AS dislikes
                 FROM votes 
                 GROUP BY id_post
             ) votes ON p.id_post = votes.id_post
+            LEFT JOIN (
+                SELECT id_post,
+                    vote as userVote
+                FROM votes WHERE id_user = ?
+            ) vote ON p.id_post = vote.id_post
             WHERE p.id_post = ? AND u.is_active = 1 AND p.is_active = 1
             `, inserts
     );
