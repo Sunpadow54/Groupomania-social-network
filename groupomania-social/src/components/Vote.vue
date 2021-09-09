@@ -1,16 +1,17 @@
 <template>
-	<v-sheet class="d-flex flex-column pa-2 elevation-1">
+	<v-sheet id="vote-sheet" class="d-flex flex-sm-column pa-2  justify-end justify-sm-start">
 		<!-- likes -->
-		<v-btn @click.prevent="vote('like')" text x-small icon>
+		<v-btn 
+            @click.prevent="vote('like')" aria-label="j'aime" text x-small icon>
 			<v-icon :color="colorLikeIcon">
 				mdi-thumb-up-outline
 			</v-icon>
 		</v-btn>
-		<span class="text-caption text-center">
+		<span class="text-caption text-center mr-2 ma-md-0">
 			{{ nbrLikes ? nbrLikes : "0" }}
 		</span>
 		<!-- dislikes -->
-		<v-btn @click.prevent="vote('dislike')" text x-small icon>
+		<v-btn @click.prevent="vote('dislike')" aria-label="j'aime pas" text x-small icon>
 			<v-icon :color="colorDislikeIcon">
 				mdi-thumb-down-outline
 			</v-icon>

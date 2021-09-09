@@ -20,8 +20,19 @@
                                 v-if="user.moderatedMsg"
                                 outlined
                                 color="secondary"
+                                class="d-none d-sm-inline"
                             >
                             {{user.moderatedMsg + (user.moderatedMsg > 1 ? ' messages à modérer' : ' message à modérer') }}
+                        </v-chip>
+                        <!-- chips for mobile -->
+                        <v-chip
+                                v-if="user.moderatedMsg"
+                                outlined
+                                small
+                                color="secondary"
+                                class="d-sm-none"
+                            >
+                            {{user.moderatedMsg ? user.moderatedMsg : '0'}}
                         </v-chip>
                     </template>
                     <ModerateUser 

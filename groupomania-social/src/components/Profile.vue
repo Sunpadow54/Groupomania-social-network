@@ -1,10 +1,15 @@
 <template>
 	<section class="container">
-		<h2>Votre Profil</h2>
-		<p>{{ user.lastname }}</p>
-		<p>{{ user.firstname }}</p>
+		<h1 class="text-h4 text-end">Votre Profil</h1>
+		<h2 class="text-h5 my-5 text-capitalize font-weight-black text-center">
+            {{ user.lastname + ' ' + user.firstname  }}
+        </h2>
+
 		<v-card>
-			<v-card-title> <h3>Modifier son profil</h3> </v-card-title>
+			<v-card-title>
+                <v-icon color="primary" class="mr-2">mdi-account-edit</v-icon>
+                <h2 class="text-h5">Modifier son profil</h2> 
+            </v-card-title>
 
 			<v-form v-model="valid" class="text-center pa-5">
 				<v-alert v-if="errors" dense text type="error">

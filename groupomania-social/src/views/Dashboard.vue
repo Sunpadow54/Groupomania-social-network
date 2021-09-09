@@ -3,7 +3,7 @@
 		<HeaderNav 
             v-on:switchMode="switchMode"
         />
-		<main class="container back">
+		<main class="mx-auto px-xs-0 px-sm-3">
             <AllPosts
 				v-if="mode === 'dashboard'"
 				v-on:switchMode="switchMode"
@@ -65,6 +65,10 @@ export default {
 </script>
 
 <style scoped>
+div
+ {
+    background-color: #e6e6e6;
+}
 main {
 	max-width: 1000px;
     min-height:100vh;

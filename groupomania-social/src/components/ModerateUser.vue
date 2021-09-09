@@ -21,7 +21,7 @@
 			<v-container>
 				<v-row>
 					<v-col>
-						<v-card-text class="d-flex align-center pa-2">
+						<v-card-text class="d-sm-flex align-center pa-2">
 							<h3 class="text-overline me-3">
 								{{
 									bannedPost.idPost

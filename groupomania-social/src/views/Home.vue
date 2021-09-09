@@ -2,11 +2,13 @@
 	<v-row no-gutters>
 		<v-col class="hidden-sm-and-down" md="5">
 			<v-img
-				src="kevin-matos-Nl_FMFpXo2g-unsplash.jpg"
-                gradient="to top right, rgba(9,31,67,.8), rgba(173,198,240,.33)"
+				:src="selectedImage"
+                alt="home-decorative-image-Groupomania"
+                gradient="340deg, rgba(9,31,67,0.8) 0%, rgba(9,31,67,0.7) 57%, rgba(209,81,90,0.3) 100%"
 				height="100vh"
+                width="100%"
 				cover
-			></v-img>
+			/>
 		</v-col>
 
 		<v-col
@@ -19,7 +21,7 @@
 				<v-app-bar dense flat dark color="primary">
 					<v-tabs grow>
 						<v-tabs-slider color="secondary"></v-tabs-slider>
-						<v-tab @click="switchMode(true)">Connection</v-tab>
+						<v-tab @click="switchMode(true)">Connexion</v-tab>
 						<v-tab @click="switchMode(false)">Inscription</v-tab>
 					</v-tabs>
 				</v-app-bar>
@@ -71,6 +73,14 @@ export default {
 			mode: {
 				login: true,
 			},
+            images: [
+                '85gb_photo-R8e7uenx1NM-unsplash.jpg',
+                'cherrydeck-rMILC1PIwM0-unsplash.jpg',
+                'daria-shevtsova-k_RYBedEvDw-unsplash.jpg',
+                'john-towner-p-rN-n6Miag-unsplash.jpg',
+                'kevin-matos-Nl_FMFpXo2g-unsplash.jpg',
+                'krakenimages-Y5bvRlcCx8k-unsplash.jpg'
+            ],
 		};
 	},
 	methods: {
@@ -78,7 +88,17 @@ export default {
 		switchMode: function(isLogin) {
 			this.mode.login = isLogin;
 		},
+        randomImages: function(items) {
+            return items[Math.floor(Math.random()*items.length)];
+        }
 	},
+    computed: {
+        selectedImage () {
+            return require(`../assets/gallerie/${this.randomImages(this.images)}`)
+            
+        }
+    },
+
 };
 </script>
 

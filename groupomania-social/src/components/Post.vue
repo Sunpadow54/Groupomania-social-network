@@ -1,81 +1,83 @@
 <template>
-	<section class="container">
-        <h2 class="body-1 mb-6">publication & commentaires</h2>
+	<section class="container-fluid">
+		<h1 class="text-h5 my-6 mx-4 mx-md-0">publication & commentaires</h1>
 		<!-- Post -->
-		<v-card elevation="2" outlined>
-			<div class="d-flex">
-				<v-sheet
-					grow
-					outline
-					elevation="1"
-					tile
-					class="order-2 overflow-hidden"
+		<v-card elevation="2" class="mb-5 d-sm-flex overflow-hidden">
+			<!-- Post -->
+			<v-sheet tile elevation="1" class="overflow-hidden order-2" width="100%">
+				<!-- Post top -->
+				<v-card-text class="d-flex align-center pa-2">
+					<h2 class="body-1 me-3 text-capitalize">
+						{{ post.author }}
+					</h2>
+					<span class="ma-0 text-caption text--disabled">
+						le {{ post.date }}
+					</span>
+					<v-icon
+						v-if="post.nbrComment >= 5"
+						color="secondary"
+						class="ml-auto"
+					>
+						mdi-fire
+					</v-icon>
+				</v-card-text>
+				<!-- Post title -->
+				<v-card-title class="pa-2">
+					{{ post.title }}
+				</v-card-title>
+				<v-card-text>
+					{{ post.content }}
+				</v-card-text>
+				<!-- Post image -->
+				<v-img
+					:src="post.img"
 					width="100%"
-				>
-					<!-- Post top -->
-					<v-card-text class="d-flex align-center pa-2">
-						<h2 class="body-1 me-3 text-capitalize">
-							{{ post.author }}
-						</h2>
-						<span class="ma-0 text-caption text--disabled">
-							le {{ post.date }}
-						</span>
-						<v-icon
-							v-if="post.nbrComment >= 5"
-							color="secondary"
-							class="ml-auto"
-						>
-                            mdi-fire
-                        </v-icon>
-                        <!-- Post actions author -->
-                        <v-card-actions class="ml-auto">
-                            <!-- Author Edit ? -->
-                            <v-btn
-                                v-if="post.id_user === $store.state.userId"
-                                @click="switchMode('editPost')"
-                                color="primary"
-                                class="mr-2"
-                                x-small
-                                outlined
-                            >
-                                Edit
-                            </v-btn>
-                            <!-- Author Delete ? -->
-                            <Delete
-                                v-if="post.id_user === $store.state.userId"
-                                :postId="postId" 
-                                v-on:switchMode="switchMode" 
-                            />
-                            <!-- Admin moderate ? -->
-                             <v-btn
-                                v-if="$store.state.isAdmin"
-                                @click="moderate('posts', post.id_post)"
-                                color="secondary"
-                                x-small
-                                outlined
-                            >
-                                modérer la publication
-                            </v-btn>
-                        </v-card-actions>
-					</v-card-text>
-					<!-- Post title -->
-					<v-card-title class="pa-2">
-						{{ post.title }}
-					</v-card-title>
-					<v-card-text>
-						{{ post.content }}
-					</v-card-text>
-					<!-- Post image -->
-					<v-img :src="post.img" width="100%" height="600"></v-img>
-				</v-sheet>
-
-                <Vote 
-                    :likes="post.likes" 
-                    :dislikes="post.dislikes" 
-                    :postId="postId"
-                    :userVote="post.userVote"
-                />
-			</div>
+					max-height="580"
+					contain
+					class="mb-4"
+				></v-img>
+				<v-divider></v-divider>
+				<!-- Post actions -->
+				<v-card-actions class="justify-end">
+					<!-- Author Edit ? -->
+					<v-btn
+						v-if="post.id_user === $store.state.userId"
+						@click="switchMode('editPost')"
+						class="mr-2"
+						color="blue-grey"
+						small
+						rounded
+						outlined
+					>
+						<v-icon left> mdi-square-edit-outline</v-icon>
+						Edit
+					</v-btn>
+					<!-- Author Delete ? -->
+					<Delete
+						v-if="post.id_user === $store.state.userId"
+						:postId="postId"
+						v-on:switchMode="switchMode"
+					/>
+					<!-- Admin moderate ? -->
+					<v-btn
+						v-if="$store.state.isAdmin"
+						@click="moderate('posts', post.id_post)"
+						color="secondary"
+						small
+						rounded
+						outlined
+					>
+						modérer la publication
+					</v-btn>
+				</v-card-actions>
+			</v-sheet>
+			<!-- Vote pannel -->
+			<Vote
+				:likes="post.likes"
+				:dislikes="post.dislikes"
+				:postId="postId"
+				:userVote="post.userVote"
+			/>
 		</v-card>
 
 		<!-- Comment Space -->
@@ -97,10 +99,10 @@
 				<v-expand-transition>
 					<div v-show="show">
 						<v-divider></v-divider>
-						<CreateComment 
-                            :postId="postId"
-                            v-on:addComment="addComment" 
-                        />
+						<CreateComment
+							:postId="postId"
+							v-on:addComment="addComment"
+						/>
 					</div>
 				</v-expand-transition>
 			</v-card>
@@ -124,18 +126,18 @@
 				<v-card-text>
 					{{ comment.content }}
 				</v-card-text>
-                <v-card-actions>
-                    <v-btn
-                        v-if="$store.state.isAdmin"
-                        @click="moderate('comment', comment.id_comment)"
-                        color="secondary"
-                        class="ml-auto"
-                        x-small
-                        outlined
-                    >
-                        modérer le commentaire
-                    </v-btn>
-                </v-card-actions>
+				<v-card-actions>
+					<v-btn
+						v-if="$store.state.isAdmin"
+						@click="moderate('comment', comment.id_comment)"
+						color="secondary"
+						class="ml-auto"
+						x-small
+						outlined
+					>
+						modérer le commentaire
+					</v-btn>
+				</v-card-actions>
 			</v-card>
 		</v-sheet>
 	</section>
@@ -158,74 +160,76 @@ export default {
 		const post = ref(null);
 		let show = ref(false);
 
-        /* functions */
-        // Create Post
+		/* functions */
+		// Create Post
 		const getPost = () => {
 			store
 				.dispatch("getData", `/posts/${context.postId}`)
-                    .then((postFetched) => {
-                        post.value = {
-                            ...postFetched,
-                            date: formatDate(postFetched.date),
-                        };
-                    })
-                    .catch((err) => console.log(err));
+				.then((postFetched) => {
+					post.value = {
+						...postFetched,
+						date: formatDate(postFetched.date),
+					};
+				})
+				.catch((err) => console.log(err));
 		};
 
-        const formatDate = (datePost) => {
-            const date = datePost.split(' ');
-            return date[0] + ' à ' + date[1];
-        }
+		const formatDate = (datePost) => {
+			const date = datePost.split(" ");
+			return date[0] + " à " + date[1];
+		};
 
-        // Edit Post
+		// Edit Post
 		const switchMode = (mode) => {
 			emit("switchMode", mode);
 		};
 
-        // new comment ?
-        function addComment (comment){
-            this.show = !this.show;
-            // add the newly created comment
-            this.post.comment.unshift(comment);
-        }
+		// new comment ?
+		function addComment(comment) {
+			this.show = !this.show;
+			// add the newly created comment
+			this.post.comment.unshift(comment);
+		}
 
-        // Admin moderate Post
-        const moderate = (msgType, id) => {
-            store
-                .dispatch("editData", {
-                    endpoint: `/${msgType}/${id}/moderate`,
-                    data: false,
-                    file: false
-                })
-                .then(() => {
-                    // if admin moderate a post => redirect to admin
-                    if(msgType === 'posts') {
-                        return switchMode('admin')
-                    }
-                    // if it was a comment => re-render comments
-                    getPost()
-                })
-                .catch(err => console.log(err));
-        };
+		// Admin moderate Post
+		const moderate = (msgType, id) => {
+			store
+				.dispatch("editData", {
+					endpoint: `/${msgType}/${id}/moderate`,
+					data: false,
+					file: false,
+				})
+				.then(() => {
+					// if admin moderate a post => redirect to admin
+					if (msgType === "posts") {
+						return switchMode("admin");
+					}
+					// if it was a comment => re-render comments
+					getPost();
+				})
+				.catch((err) => console.log(err));
+		};
 
 		// Render
 		onMounted(() => {
 			getPost();
 		});
 
-        // watch change made from comments (rerender)
-        watch(() => show.value, () => {
-            getPost();
-        })
+		// watch change made from comments (rerender)
+		watch(
+			() => show.value,
+			() => {
+				getPost();
+			}
+		);
 
-        
 		/*  return data */
 		return {
 			post,
 			show,
-            switchMode,
-            addComment,
-            moderate
+			switchMode,
+			addComment,
+			moderate,
 		};
 	},
 };

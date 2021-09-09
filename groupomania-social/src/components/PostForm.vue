@@ -1,12 +1,15 @@
 <template>
-	<v-card>
+<section class="container">
+	<v-card class="mt-3">
 		<v-card-title v-if="mode === 'createPost'">
-			Créer un nouveau Post
+            <v-icon color="primary" class="mr-2">mdi-pencil-plus</v-icon>
+			<h1 class="text-h5">Créer un nouveau Post</h1>
 		</v-card-title>
 		<v-card-title v-if="mode === 'editPost'">
-			Modifier son Post
+            <v-icon color="primary" class="mr-2">mdi-square-edit-outline</v-icon>
+			<h1 class="text-h5">Modifier son Post</h1>
 		</v-card-title>
-
+        
 		<v-form v-model="valid" class="text-center pa-5">
 			<v-text-field
 				v-model="post.title"
@@ -70,6 +73,7 @@
 		>
 		</v-img>
 	</v-card>
+</section>
 </template>
 
 <script>
