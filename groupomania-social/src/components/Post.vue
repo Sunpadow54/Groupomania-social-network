@@ -157,7 +157,7 @@ export default {
 	setup(context, { root, emit }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
-		let post = ref('');
+		let post = ref(null);
 		let show = ref(false);
 
 		/* functions */
