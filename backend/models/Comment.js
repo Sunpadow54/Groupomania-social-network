@@ -28,7 +28,7 @@ Comment.create = (newComment) => {
             // error
             if (err) return reject(err.sqlMessage);
             // success
-            resolve(res);
+            resolve(res.insertId);
         });
     })
 }
@@ -73,7 +73,7 @@ Comment.findAll = (postId) => {
     // define the query
     const query = sql.format(`
             SELECT c.id_comment, c.content_comment as content, 
-                DATE_FORMAT(c.date_comment, "%d/%m/%Y %T") as date,
+                DATE_FORMAT(c.date_comment, "%d/%m/%Y, %T") as date,
                 CONCAT(u.lastname, ' ', u.firstname) as author
             FROM comments c
             JOIN users u ON c.id_user = u.id_user

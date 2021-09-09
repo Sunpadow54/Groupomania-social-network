@@ -16,7 +16,10 @@ exports.createComment = (req, res, next) => {
     });
     // insert post in Db
     Comment.create(newComment)
-        .then(comment => res.status(201).json(comment))
+        .then(idComment => {
+            res.status(201).json({ idComment })
+
+        })
         .catch(error => res.status(500).json({ error }));
 };
 

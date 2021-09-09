@@ -109,8 +109,8 @@
 
 			<!-- All Comments -->
 			<v-card
-				v-for="comment in post.comments"
-				:key="comment.id_comment"
+				v-for="(comment, index) in post.comments"
+				:key="index"
 				tile
 				elevation="0"
 				class="mb-3"
@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from "@vue/composition-api";
+import { ref, onMounted } from "@vue/composition-api";
 import CreateComment from "@/components/CreateComment.vue";
 import Delete from "@/components/Delete.vue";
 import Vote from "@/components/Vote.vue";
@@ -157,7 +157,7 @@ export default {
 	setup(context, { root, emit }) {
 		/* variables */
 		const store = root.$store; // access to store in setup()
-		const post = ref(null);
+		let post = ref('');
 		let show = ref(false);
 
 		/* functions */
@@ -185,10 +185,9 @@ export default {
 		};
 
 		// new comment ?
-		function addComment(comment) {
+		function addComment(commentAdded) {
 			this.show = !this.show;
-			// add the newly created comment
-			this.post.comment.unshift(comment);
+            post.value.comments.unshift(commentAdded);
 		}
 
 		// Admin moderate Post
@@ -215,14 +214,6 @@ export default {
 			getPost();
 		});
 
-		// watch change made from comments (rerender)
-		watch(
-			() => show.value,
-			() => {
-				getPost();
-			}
-		);
-
 		/*  return data */
 		return {
 			post,
@@ -230,6 +221,7 @@ export default {
 			switchMode,
 			addComment,
 			moderate,
+
 		};
 	},
 };

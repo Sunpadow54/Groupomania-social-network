@@ -37,10 +37,11 @@ export default {
 		let commentToSend = {
 			userId: store.state.userId,
 			comment: {
-				content: "",
+				content: '',
 				postId: props.postId,
 			},
 		};
+
 
         /* functions */
 		const createComment = () => {
@@ -51,10 +52,15 @@ export default {
 					hasAuth: true,
 					file: null,
 				})
-				.then((commentSuccess) => {
+				.then((idComment) => {
+                    let newComment = {
+                        id_comment: idComment,
+                        author:store.state.username,
+                        date: new Date().toLocaleString(),
+                        content: commentToSend.comment.content
+                    }
                     // add the newly created comment
-                    emit('addComment', commentSuccess)
-                    
+                    emit('addComment', newComment)
                 })
 				.catch((err) => console.log({ err }));
 		};
