@@ -114,7 +114,7 @@ export default new Vuex.Store({
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + context.getters.getToken,
                     },
-                    body: formattedData
+                    body: formattedData,
                 }
             }
 
@@ -122,10 +122,6 @@ export default new Vuex.Store({
                 fetch(url + endpoint, {
                     method: "PUT",
                     ...fetchContent
-                    /* headers: {
-                        ...headers,
-                    },
-                    body: formattedData, */
                 }).then((res) => {
                     resolve(res.json());
                 });

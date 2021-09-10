@@ -60,14 +60,22 @@
 					Modifier
 				</v-btn>
 			</v-form>
+            <v-card-actions class="justify-end">
+                <Delete :mode="mode" />
+            </v-card-actions>
+            
 		</v-card>
 	</section>
 </template>
 
 <script>
 import { ref, onMounted } from "@vue/composition-api";
+import Delete from "@/components/Delete.vue";
+
 export default {
 	name: "Profile",
+    props: ["mode"],
+    components: { Delete },
 	setup(context, { root, emit }) {
 		/* Variables */
 		const store = root.$store; // access to store in setup()

@@ -111,7 +111,6 @@ Post.findAll = (idUser) => {
             ORDER BY COALESCE(latestCommDate, p.date_post) DESC
         `, idUser
     );
-    console.log(query);
 
     // ask SQL
     return new Promise((resolve, reject) => {
@@ -119,7 +118,6 @@ Post.findAll = (idUser) => {
             // error
             if (err) return reject(err);
             // success
-            console.log(res);
             resolve(res);
         });
     })

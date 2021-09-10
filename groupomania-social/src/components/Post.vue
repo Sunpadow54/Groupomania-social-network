@@ -56,6 +56,7 @@
 					<Delete
 						v-if="post.id_user === $store.state.userId"
 						:postId="postId"
+                        :mode="mode"
 						v-on:switchMode="switchMode"
 					/>
 					<!-- Admin moderate ? -->
@@ -152,7 +153,7 @@ import Vote from "@/components/Vote.vue";
 export default {
 	name: "Post",
 	components: { CreateComment, Delete, Vote },
-	props: ["postId"],
+	props: ["postId", 'mode'],
 
 	setup(context, { root, emit }) {
 		/* variables */

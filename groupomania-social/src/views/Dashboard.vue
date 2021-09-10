@@ -14,6 +14,7 @@
                 v-if="mode === 'onePost'"
                 v-on:switchMode="switchMode"
                 :postId="postId"
+                :mode="mode"
             />
 
 			<PostForm
@@ -25,7 +26,8 @@
 
 			<Profile 
                 v-if="mode === 'profile'" 
-                v-on:switchMode="switchMode" 
+                v-on:switchMode="switchMode"
+                :mode="mode"
             />
 
             <Admin
