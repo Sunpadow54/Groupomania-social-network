@@ -55,19 +55,20 @@ exports.editPost = (req, res, next) => {
                 userId: res.locals.userId
             }; // no
             
-            // Delete old image if a new one is upload
-            if(req.file) {
-                // seach name of file
-                const filename = dbPost.img.split('/images/')[1];
-                // if the file exist delete it
-                if (fs.existsSync(`images/${filename}`)) {
-                    fs.unlinkSync(`images/${filename}`);
-                }
-            }
-
             // Modify in db
             Post.edit(editedPost)
-                .then(message => res.status(201).json({ message }))
+                .then(message => {
+                    // Delete old image if a new one is upload
+                    if(req.file) {
+                        // seach name of file
+                        const filename = dbPost.img.split('/images/')[1];
+                        // if the file exist delete it
+                        if (fs.existsSync(`images/${filename}`)) {
+                            fs.unlinkSync(`images/${filename}`);
+                        }
+                    }
+                    res.status(201).json({ message })
+                })
                 .catch(error => res.status(500).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
