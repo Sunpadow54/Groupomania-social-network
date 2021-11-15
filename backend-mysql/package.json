@@ -1,5 +1,5 @@
 {
-  "name": "backend-groupomania",
+  "name": "backend-groupomania-mysql",
   "version": "1.0.0",
   "description": "Api social internal social network of Groupomania",
   "main": "server.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sunpadow54/ElsaDessarps_7_02082021.git"
+    "url": "https://github.com/Sunpadow54/Groupomania-social-network.git"
   },
   "author": "Sunpadown54",
   "license": "ISC",
@@ -27,5 +27,8 @@
     "multer": "^1.4.3",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.12"
+  },
+  "engines": {
+    "node": "16.7.0"
   }
 }
