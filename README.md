@@ -68,8 +68,9 @@ Dans le dossier <kbd> :file_folder: backend </kbd>
 
 ### 4. Accès Admin
 
-la base de donnée créée contient deux users avec le rôle Admin
-pour accéder à l'api en tant qu'admin :
+la base de donnée **avec exemple** créée contient deux users avec le rôle Admin.
+
+Pour accéder à l'api en tant qu'admin  :
 
 :guard::one:
 ```
@@ -81,6 +82,8 @@ Password : Ev5QZ@Wg5_RUBdtK
 Email : admin2@email.com
 Password : a3qZ-4ef8rrCDFbb
 ```
+
+( :crayon: la clef pour crypter les emails devra être : ```EMAIL_CRYPTO_KEY=Vh6uiqNlCvgwxe5kfxORtG ``` )
 
 (la modification des mots de passe n'est pas encore implémentée)
 
