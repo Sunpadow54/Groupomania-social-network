@@ -23,21 +23,27 @@ Construire un réseau social interne pour l'entreprise *Groupomania*.
 node version 16.7.0
 
 dans les deux dossiers pour une installation rapide :
+- front : <kbd> :file_folder: groupomania-social </kbd>
+- back :
+    * (version mysql) :arrow_right: <kbd> :file_folder: backend-mysql </kbd>
+    * (version postgresql) :arrow_right: <kbd> :file_folder: backend-postgresql </kbd>
+
+
 ```
 npm install
 ```
 
 ### 2. Créer la base de donnée mysql
 
-pour une base de donnée vide utilisez : [mysql empty dump](/backend/config/create-db-sample.sql)
+pour une base de donnée vide utilisez : [mysql empty dump](/backend-mysql/config/create-db-sample.sql)
 
-pour visualiser avec des exemples : [mysql with sample dump](/backend/config/create-db-sample.sql)
+pour visualiser avec des exemples : [mysql with sample dump](/backend-mysql/config/create-db-sample.sql)
 
 ### 3. Paramétrer dotenv
 
 Créer un fichier <kbd> :page_facing_up: .env </kbd> dans le dossier <kbd> :file_folder: backend </kbd> & Changer les variables d’environnement
 
-[See the sample](/backend/.env_sample)
+[See the sample](/backend-mysql/.env_sample)
 
 ```
 PORT=YOUR_PORT_HERE
@@ -76,7 +82,7 @@ Email : admin2@email.com
 Password : a3qZ-4ef8rrCDFbb
 ```
 
-(la modification des mots de passe n'est pas encore implémenté)
+(la modification des mots de passe n'est pas encore implémentée)
 
 ***
 
@@ -84,7 +90,7 @@ Password : a3qZ-4ef8rrCDFbb
 
 * Node Js 
     * Express
-* Database : mySql
+* Database : mySql || postgresql
 * Vue 2
 * Vutify
 
@@ -95,7 +101,7 @@ Password : a3qZ-4ef8rrCDFbb
 
 :file_folder: **backend** :
 * frameworks :  <kbd>**Express**</kbd>
-* packages : <kbd>**mysql**</kbd> / <kbd>**bcrypt**</kbd> / <kbd>**body-parser**</kbd> / <kbd>**jsonwebtoken**</kbd> / <kbd>**multer**</kbd> / <kbd>**helmet**</kbd> / <kbd>**hpp**</kbd> /<kbd>**express-rate-limit**</kbd> / <kbd>**express-validator**</kbd>
+* packages : ( <kbd>**mysql**</kbd> || <kbd>**pg**</kbd> / <kbd>**pg-format**</kbd> ) / <kbd>**bcrypt**</kbd> / <kbd>**body-parser**</kbd> / <kbd>**jsonwebtoken**</kbd> / <kbd>**multer**</kbd> / <kbd>**helmet**</kbd> / <kbd>**hpp**</kbd> /<kbd>**express-rate-limit**</kbd> / <kbd>**express-validator**</kbd>
 * modules: <kbd>**dotenv**</kbd> / <kbd>**crypto-js**</kbd>
 
 ## Auteur
